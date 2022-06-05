@@ -7,6 +7,7 @@ namespace communityDetection
         static void Main(string[] args)
         {
             Console.WriteLine("Hello World!");
+            readGraphs.read_graph();
         }
     }
 }

@@ -12,7 +12,6 @@ def graph_generator(n, avg_degree, max_degree, node_degree_exponent, min_com_siz
     lfr = nk.generators.LFRGenerator(n)
     lfr.generatePowerlawDegreeSequence(avg_degree, max_degree, node_degree_exponent)
     lfr.generatePowerlawCommunitySizeSequence(min_com_size, max_com_size, com_size_exponent)
-    lfr.setMu(0.8)
     return lfr
 
 
@@ -22,7 +21,10 @@ def generate_graphs(lfr, number_graphs):
     """
     graphs = []
     for i in range(number_graphs):
-        graphs.append(lfr.generate())
+        graph = lfr.generate()
+        partition = lfr.getPartition()
+        graphs.append((graph, partition))
+
     return graphs
 
 
@@ -32,10 +34,12 @@ def generate_all_graphs(number_graphs, sizes, mus, avg_degree, max_degree, node_
     """
     all_graphs = []
     for n in sizes:
+        graphs = []
         for mu in mus:
             lfr = graph_generator(n, avg_degree, max_degree, node_degree, min_com_size, max_com_size, com_size_exponent)
             lfr.setMu(mu)
-            all_graphs.append(generate_graphs(lfr, number_graphs))
+            graphs.append(generate_graphs(lfr, number_graphs))
+        all_graphs.append(graphs)
     return all_graphs
 
 
