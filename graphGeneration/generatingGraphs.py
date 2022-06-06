@@ -42,4 +42,26 @@ def generate_all_graphs(number_graphs, sizes, mus, avg_degree, max_degree, node_
         all_graphs.append(graphs)
     return all_graphs
 
+def small_graph():
+    """
+    Generates a small graph.
+    """
+    n = 30
+    avg_degree = 5
+    max_degree = 10
+    node_degree_exponent = -1
+    min_com_size = 5
+    max_com_size = 10
+    com_size_exponent = -1
+
+    lfr = nk.generators.LFRGenerator(n)
+    lfr.generatePowerlawDegreeSequence(avg_degree, max_degree, node_degree_exponent)
+    lfr.generatePowerlawCommunitySizeSequence(min_com_size, max_com_size, com_size_exponent)
+    lfr.setMu(0.6)
+
+    graph = lfr.generate()
+    partition = lfr.getPartition()
+    return graph, partition
+
+
 

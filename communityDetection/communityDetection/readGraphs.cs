@@ -3,8 +3,8 @@ namespace communityDetection
 {
 	public static class readGraphs
 	{
-		static string file_edges = "../../../graphs/0_graph_edges.txt";
-		static string file_partition = "../../../graphs/0_graph_partition.txt";
+		static string file_edges = "../../../graphs/smallgraph_graph_edges.txt";
+		static string file_partition = "../../../graphs/smallgraph_graph_partition.txt";
 
 		public static void read_graph()
         {

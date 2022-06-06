@@ -17,11 +17,10 @@ max_com_size = 50
 com_size_exponent = -1
 
 # Generate graphs
-all_graphs = gg.generate_all_graphs(number_graphs, sizes, mus, avg_degree, max_degree, node_degree_exponent,
-                                    min_com_size, max_com_size, com_size_exponent)
-graph = all_graphs[0][0][0][0]
-print(nk.overview(graph))
-
+# all_graphs = gg.generate_all_graphs(number_graphs, sizes, mus, avg_degree, max_degree, node_degree_exponent,
+#                                     min_com_size, max_com_size, com_size_exponent)
+# graph = all_graphs[0][0][0][0]
+# print(nk.overview(graph))
 
 def write_graphs(sizes, mus, number_graphs, all_graphs):
     """
@@ -45,7 +44,14 @@ def write_graphs(sizes, mus, number_graphs, all_graphs):
                                               './graphs/' + str(n) + '/' + str(mu) + '/' + str(k) + "_graph_partition.txt")
 
 
-write_graphs(sizes, mus, number_graphs, all_graphs)
+def write_one_graph(graph, partition, filename):
+    nk.writeGraph(graph, filename + "_graph_edges.txt", nk.Format.METIS)
+    nk.community.writeCommunities(partition, filename + "_graph_partition.txt")
+
+# write_graphs(sizes, mus, number_graphs, all_graphs)
+
+smallgraph, partition = gg.small_graph()
+write_one_graph(smallgraph, partition, "smallgraph")
 
 
 def louvain(graph):
