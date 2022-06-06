@@ -14,18 +14,17 @@ namespace communityDetection
 			int vertices = int.Parse(input[0]);
 			int edges = int.Parse(input[1]);
 
-			Graph graph = new Graph(vertices);
-
-			fill_adjacency_matrix(graph, reader);
-
-			fill_communities(graph, new StreamReader(file_partition));
+			Graph graph = create_graph(vertices, reader, new StreamReader(file_partition));
 		}
 
-		private static void fill_adjacency_matrix(Graph graph, StreamReader reader)
+		private static Graph create_graph(int n, StreamReader readergraph, StreamReader readerpartition)
         {
-			for (int i = 0; i < graph.vertices; i++)
+			Graph graph = new Graph(n);
+			for (int i = 0; i < graph.vertices.Length; i++)
 			{
-				string[] adjacencylist = reader.ReadLine().Split(" ");
+				string[] adjacencylist = readergraph.ReadLine().Split(" ");
+
+				int degree = 0;
 
 				for (int j = 0; j < adjacencylist.Length; j++)
 				{
@@ -33,20 +32,24 @@ namespace communityDetection
 					{
 						int neighbour = int.Parse(adjacencylist[j]);
 						graph.AdjacencyMatrix[i, neighbour - 1] = 1;
+
+						graph.AdjacenceList[i].Add(neighbour - 1);
+						degree++;
 					}
 				}
-			}
-		}
 
-		private static void fill_communities(Graph graph, StreamReader reader)
-        {
-			for (int i = 0; i < graph.vertices; i++)
-			{
-				int community = int.Parse(reader.ReadLine());
-				if (!graph.communities.ContainsKey(community))
-					graph.communities[community] = new List<int>();
-				graph.communities[community].Add(i);
+				int community = int.Parse(readerpartition.ReadLine());
+
+				graph.vertices[i].degree = degree;
+				graph.vertices[i] = new Vertex(i, community, degree);
+
+				// Add benchmark communities
+				if (!graph.benchmark_communities.ContainsKey(community))
+					graph.benchmark_communities[community] = new List<int>();
+				graph.benchmark_communities[community].Add(i);
 			}
+
+			return graph;
 		}
 	}
 }
