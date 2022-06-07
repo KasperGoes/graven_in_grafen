@@ -34,6 +34,8 @@ namespace communityDetection
 						graph.AdjacencyMatrix[i, neighbour - 1] = 1;
 
 						graph.AdjacenceList[i].Add(neighbour - 1);
+
+						// TO DO: Add neighbours to vertex class 
 						degree++;
 					}
 				}

@@ -28,7 +28,7 @@ namespace communityDetection
 		}
 	}
 
-	public struct Community
+	public class Community
     {
 		public int id;
 		public int sum_in = 1;
@@ -42,7 +42,7 @@ namespace communityDetection
         }
     }
 
-	public struct Vertex
+	public class Vertex
 	{
 		public int id;
 		public int degree;

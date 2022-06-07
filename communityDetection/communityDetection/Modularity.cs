@@ -23,7 +23,7 @@ namespace communityDetection
 			int W = g.W;
 			int degree = vertex.degree;
 
-			int degree_in_com = update_sum_in(community, vertex);
+			int degree_in_com = Louvain.update_sum_in(community, vertex);
 
 			int new_sum_in = community.sum_in + (degree_in_com * 2);
 			int new_sum_tot = community.sum_tot + degree;

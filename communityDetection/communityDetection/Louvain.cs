@@ -9,7 +9,7 @@ namespace communityDetection
         {
 			// Create community for ever node
 			for (int i = 0; i < g.vertices.Length; i++)
-				g.communities.Add(i,new Community(i, g.vertices[i]));
+				g.communities.Add(i, new Community(i, g.vertices[i]));
 
 			float modularity = Modularity.modularity(g);
 
@@ -18,10 +18,11 @@ namespace communityDetection
 			Random random = new Random();
 			List <int> random_order = order.OrderBy(x => random.Next()).ToList();
 
-			float max_gain = 0;
+			
 			bool found_improvement = true;
 
 			// While improvement is possible
+			// TO DO: use threshold for modularity improvement 
 			while(found_improvement)
             {
 				found_improvement = false;
@@ -29,11 +30,13 @@ namespace communityDetection
 				// Loop through all vertices in random order
 				for (int i = 0; i < g.vertices.Length; i++)
                 {
+					float max_gain = 0;
 					// Acces random vertex
 					Vertex vertex = g.vertices[random_order[i]];
 					int best_community = -1;
 					
 					// Compute best change in community if possible
+					// TO DO: check if already added to neighbouring community, create list of communities to check
 					foreach (int neighbourcom in g.AdjacenceList[vertex.id])
                     {
 						float modularity_diff = Modularity.modularity_difference(g, g.communities[neighbourcom], vertex);
@@ -65,7 +68,7 @@ namespace communityDetection
         /// <param name="community"></param>
         /// <param name="vertex"></param>
         /// <returns></returns>
-		private static int update_sum_in(Community community, Vertex vertex)
+		public static int update_sum_in(Community community, Vertex vertex)
         {
 			int degree_in_com = 0;
 			for (int i = 0; i < vertex.degree; i++)
