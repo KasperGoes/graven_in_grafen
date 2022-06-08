@@ -40,7 +40,7 @@ namespace communityDetection
 						//graph.AdjacenceList[i].Add(neighbour);
 
 						// TO DO: Add neighbours to vertex class
-						vertex.neighbours.Add(vertices[neighbour]);
+						vertex.neighbours.Add(vertices[neighbour].id);
 						vertex.degree++;
 					}
 				}
@@ -49,12 +49,11 @@ namespace communityDetection
 
 				vertex.community = community;
 
-
 				// Add benchmark communities NOG CONTROLEREN!!!!!!
 				if (!graph.benchmark_communities.ContainsKey(community))
 					graph.benchmark_communities[community] = new Community(community, vertex);
 				else
-					graph.benchmark_communities[community].vertices.Add(vertex.id, vertex);
+					graph.benchmark_communities[community].vertices.Add(vertex.id);
 			}
 
 			return graph;

@@ -49,7 +49,7 @@ namespace communityDetection
 
 			int degree_in_com = Louvain.update_sum_in(community, vertex);
 
-			float first = (float)community.sum_in + (2 * (float)degree_in_com) / (2 * (float)g.m);
+			float first = ((float)community.sum_in + (2 * (float)degree_in_com)) / (2 * (float)g.m);
 			float second =  (float)Math.Pow(((( (float) community.sum_tot + (float)degree) / (2 * (float)g.m))), 2);
 			float third = (float) community.sum_in / (2 * (float)g.m);
 			float fourth = (float) Math.Pow(((float)community.sum_tot / (2 * (float)g.m)), 2);
