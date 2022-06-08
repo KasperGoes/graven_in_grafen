@@ -43,7 +43,7 @@ namespace communityDetection
 				{
 					double acceptProb = Math.Exp(delta/temperature);
 					proba = rnd.NextDouble();
-					if (proba > Math.Exp(delta/temperature))
+					if (proba < Math.Exp(delta/temperature))
 					{
 						//update graph
 						g = candadite;
