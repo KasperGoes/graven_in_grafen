@@ -8,47 +8,53 @@ namespace communityDetection
 
 		public static void read_graph()
         {
-			StreamReader reader = new StreamReader(file_edges);
-			string[] input = reader.ReadLine().Split(" ");
-
-			int vertices = int.Parse(input[0]);
-			int edges = int.Parse(input[1]);
-
-			Graph graph = create_graph(vertices, reader, new StreamReader(file_partition));
+			Graph graph = create_graph(new StreamReader(file_edges), new StreamReader(file_partition));
 		}
 
-		private static Graph create_graph(int n, StreamReader readergraph, StreamReader readerpartition)
+		public static Graph create_graph(StreamReader readergraph, StreamReader readerpartition)
         {
-			Graph graph = new Graph(n);
+			string[] input = readergraph.ReadLine().Split(" ");
+
+			int n = int.Parse(input[0]);
+			int m = int.Parse(input[1]);
+
+			Graph graph = new Graph(n, m);
+			Vertex[] vertices = graph.vertices; 
+
+			for (int i = 0; i < n; i++)
+				vertices[i] = new Vertex(i, i, 0);
+
 			for (int i = 0; i < graph.vertices.Length; i++)
 			{
 				string[] adjacencylist = readergraph.ReadLine().Split(" ");
 
-				int degree = 0;
-
+				Vertex vertex = vertices[i];
+				
 				for (int j = 0; j < adjacencylist.Length; j++)
 				{
 					if (adjacencylist[j] != "")
 					{
-						int neighbour = int.Parse(adjacencylist[j]);
-						graph.AdjacencyMatrix[i, neighbour - 1] = 1;
+						int neighbour = int.Parse(adjacencylist[j]) - 1;
+						graph.AdjacencyMatrix[i, neighbour] = 1;
 
-						graph.AdjacenceList[i].Add(neighbour - 1);
+						//graph.AdjacenceList[i].Add(neighbour);
 
-						// TO DO: Add neighbours to vertex class 
-						degree++;
+						// TO DO: Add neighbours to vertex class
+						vertex.neighbours.Add(vertices[neighbour]);
+						vertex.degree++;
 					}
 				}
 
 				int community = int.Parse(readerpartition.ReadLine());
 
-				graph.vertices[i].degree = degree;
-				graph.vertices[i] = new Vertex(i, community, degree);
+				vertex.community = community;
 
-				// Add benchmark communities
+
+				// Add benchmark communities NOG CONTROLEREN!!!!!!
 				if (!graph.benchmark_communities.ContainsKey(community))
-					graph.benchmark_communities[community] = new List<int>();
-				graph.benchmark_communities[community].Add(i);
+					graph.benchmark_communities[community] = new Community(community, vertex);
+				else
+					graph.benchmark_communities[community].vertices.Add(vertex.id, vertex);
 			}
 
 			return graph;

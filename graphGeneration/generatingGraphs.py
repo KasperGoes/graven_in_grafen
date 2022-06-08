@@ -6,7 +6,7 @@ import networkit as nk
 
 def graph_generator(n, avg_degree, max_degree, node_degree_exponent, min_com_size, max_com_size, com_size_exponent):
     """
-    Returns a LFT graph generator.
+    Returns a LFR graph generator.
     n is the number of vertices
     """
     lfr = nk.generators.LFRGenerator(n)
