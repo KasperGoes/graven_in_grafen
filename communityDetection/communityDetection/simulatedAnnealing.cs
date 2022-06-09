@@ -54,8 +54,9 @@ namespace communityDetection
 
 				//print modularity every 400 iterations
 				if (iteration%400==0)
-				Console.WriteLine(modularity(graph));
+				Console.WriteLine(modularity(g));
 			}
+			return modularity(g);
 		}
 
 		// generate the next iteration
