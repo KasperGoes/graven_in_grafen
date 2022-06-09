@@ -1,4 +1,5 @@
 ﻿using System;
+
 namespace communityDetection
 {
 	public class Graph
@@ -27,24 +28,34 @@ namespace communityDetection
 			benchmark_communities = new Dictionary<int, Community>();
 			communities = new Dictionary<int, Community>();
 		}
-	}
 
-	public class Community
-    {
-		public int id;
-		public int sum_in = 0;
-		public int sum_tot = 0;
-		public HashSet<int> vertices;
-		public HashSet<int> original_vertices;
+		/// <summary>
+		/// Updates the graph for the one community after adding a vertex 
+		/// </summary>
+		/// <param name="g"></param>
+		/// <param name="community"></param>
+		/// <param name="vertex"></param>
+		public void update_graph(Community community, Vertex vertex)
+		{
+			float modularitydiff = Modularity.modularity_difference(this, community, vertex);
+			// Remove from old community
+			this.communities[vertex.community].vertices.Remove(vertex.id);
 
-		public Community(int id, Vertex v)
-        {
-			this.id = id;
-			this.vertices = new HashSet<int>{ id };
-			this.original_vertices = new HashSet<int>();
-			this.sum_tot = v.degree;
+			//If the resulting community is empty, remove community from graph
+			if (this.communities[vertex.community].vertices.Count == 0)
+				this.communities.Remove(vertex.community);
+
+			// Add to new community
+			community.vertices.Add(vertex.id);
+			vertex.community = community.id;
+
+			int degree_in_community = community.update_sum_in(vertex);
+
+			// Update sums
+			community.sum_in += degree_in_community;
+			community.sum_tot = community.sum_tot + vertex.degree;
 		}
-    }
+	}
 
 	public class Vertex
 	{

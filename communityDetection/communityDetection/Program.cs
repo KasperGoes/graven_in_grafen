@@ -14,8 +14,32 @@ namespace communityDetection
             StreamReader readerpartition = new StreamReader(filename2);
 
             Graph graph = readGraphs.create_graph(readeredges, readerpartition);
-            Louvain.louvain(graph);
+            //Louvain.louvain(graph);
             //test_modularity(graph);
+
+            set_initial_communities(graph);
+            Graph result = SA.simulatedAnnealing(graph);
+        }
+
+        static void set_initial_communities(Graph graph)
+        {
+            //graph.communities.Add(0, new Community(0, graph.vertices[0]));
+            //graph.communities[0].vertices.Add(0);
+
+            //graph.communities.Add(1, new Community(1, graph.vertices[1]));
+            //graph.communities[1].vertices.Add(1);
+
+            //graph.communities.Add(2, new Community(2, graph.vertices[2]));
+            //graph.communities[2].sum_in = 3;
+            //graph.communities[2].sum_tot = 7;
+
+            //graph.communities[2].vertices.Add(2);
+            //graph.communities[2].vertices.Add(3);
+            //graph.communities[2].vertices.Add(4);
+
+            // Create community for ever node
+            for (int i = 0; i < graph.vertices.Length; i++)
+                graph.communities.Add(i, new Community(i, graph.vertices[i]));
         }
 
         /// <summary>
@@ -25,21 +49,7 @@ namespace communityDetection
         {
             float modularity = Modularity.modularity(graph);
 
-            graph.communities.Add(0, new Community(0, graph.vertices[0]));
-            graph.communities[0].vertices.Add(0);
-
-            graph.communities.Add(1, new Community(1, graph.vertices[1]));
-            graph.communities[1].vertices.Add(1);
-
-            graph.communities.Add(2, new Community(2, graph.vertices[2]));
-            graph.communities[2].sum_in = 3;
-            graph.communities[2].sum_tot = 7;
-
-            graph.communities[2].vertices.Add(2);
-            graph.communities[2].vertices.Add(3);
-            graph.communities[2].vertices.Add(4);
-
-            Louvain.update_graph(graph, graph.communities[2], graph.vertices[0]);
+            graph.update_graph(graph.communities[2], graph.vertices[0]);
         }
     }
 }
