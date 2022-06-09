@@ -17,10 +17,11 @@ namespace communityDetection
 
 		public Dictionary<int,Community> communities;
 
-		public Graph(int n, int m)
+		// TO DO: Add modularity
+
+		public Graph(int n)
 		{
 			this.n = n;
-			this.m = m;
 			vertices = new Vertex[n];
 			AdjacencyMatrix = new int[n, n];
 
@@ -29,12 +30,6 @@ namespace communityDetection
 			communities = new Dictionary<int, Community>();
 		}
 
-		/// <summary>
-		/// Updates the graph for the one community after adding a vertex 
-		/// </summary>
-		/// <param name="g"></param>
-		/// <param name="community"></param>
-		/// <param name="vertex"></param>
 		public void update_graph(Community community, Vertex vertex)
 		{
 			float modularitydiff = Modularity.modularity_difference(this, community, vertex);
@@ -52,8 +47,10 @@ namespace communityDetection
 			int degree_in_community = community.update_sum_in(vertex);
 
 			// Update sums
-			community.sum_in += degree_in_community;
-			community.sum_tot = community.sum_tot + vertex.degree;
+			community.sum_in += degree_in_community; // TO DO: instead of vertex degree sum over weights
+			community.sum_tot = community.sum_tot + vertex.degree; // TO DO: instead of vertex degree sum over weights
+
+			//Update oude community values 
 		}
 	}
 
@@ -64,12 +61,16 @@ namespace communityDetection
 		public int community;
 		public List<int> neighbours;
 
-		public Vertex(int id, int community, int degree)
+		public HashSet<int> original_vertices;
+
+		// TO DO: Add variable to compute the neighbouring communities and by which vertices those communtities are connected (Dict <int,list<int>)
+
+		public Vertex(int id, int community)
 		{
 			this.id = id;
 			this.community = community;
-			this.degree = degree;
 			neighbours = new List<int>();
+			original_vertices = new HashSet<int>();
 		}
 	}
 }

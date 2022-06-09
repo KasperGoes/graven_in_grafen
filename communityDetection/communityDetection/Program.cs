@@ -14,11 +14,11 @@ namespace communityDetection
             StreamReader readerpartition = new StreamReader(filename2);
 
             Graph graph = readGraphs.create_graph(readeredges, readerpartition);
-            //Louvain.louvain(graph);
-            //test_modularity(graph);
+            //set_initial_communities(graph);
 
-            set_initial_communities(graph);
-            Graph result = SA.simulatedAnnealing(graph);
+            Louvain.louvain(graph);
+            //test_modularity(graph);
+            //Graph result = SA.simulatedAnnealing(graph);
         }
 
         static void set_initial_communities(Graph graph)

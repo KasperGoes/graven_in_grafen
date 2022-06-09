@@ -1,20 +1,11 @@
 ﻿using System;
 namespace communityDetection
 {
-	//public  class myClass
- //   {
- //       public Graph a;
- //       public object Clone()
- //       {
- //           return this.MemberwiseClone();
- //       }
-	//}
-
 	public static class SA
 	{
 		static Random random = new Random();
 
-		public static Graph simulatedAnnealing(Graph g)
+		public static float simulatedAnnealing(Graph g)
 		{
 			int iteration =-1;
 
@@ -55,16 +46,11 @@ namespace communityDetection
 
 				//print modularity every 400 iterations
 				if (iteration%400==0)
-<<<<<<< HEAD
-				Console.WriteLine(modularity(g));
-			}
-			return modularity(g);
-=======
+
 				Console.WriteLine(Modularity.modularity(g));
 			}
 
-			return g;
->>>>>>> 752c02feb01c430bcb86d0c932fa229aa897c238
+			return Modularity.modularity(g);
 		}
 
 		// generate the next iteration

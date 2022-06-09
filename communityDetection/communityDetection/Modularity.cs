@@ -3,11 +3,6 @@ namespace communityDetection
 {
 	public static class Modularity
 	{
-		/// <summary>
-        /// Computes the modularity of the enitre graph
-        /// </summary>
-        /// <param name="g"></param> Graph
-        /// <returns></returns>
 		public static float modularity(Graph g)
         {
 			float modularity = 0;
@@ -36,13 +31,6 @@ namespace communityDetection
 				return 0;
 		}
 
-		/// <summary>
-		/// Computes the modularity difference after adding a vertex
-		/// </summary>
-		/// <param name="g"></param>
-		/// <param name="community"></param>
-		/// <param name="vertex"></param>
-		/// <returns></returns>
 		public static float modularity_difference(Graph g, Community community, Vertex vertex)
 		{
 			int degree = vertex.degree;

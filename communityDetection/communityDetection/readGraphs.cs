@@ -18,11 +18,12 @@ namespace communityDetection
 			int n = int.Parse(input[0]);
 			int m = int.Parse(input[1]);
 
-			Graph graph = new Graph(n, m);
+			Graph graph = new Graph(n);
+			graph.m = m;
 			Vertex[] vertices = graph.vertices; 
 
 			for (int i = 0; i < n; i++)
-				vertices[i] = new Vertex(i, i, 0);
+				vertices[i] = new Vertex(i, i);
 
 			for (int i = 0; i < graph.vertices.Length; i++)
 			{
