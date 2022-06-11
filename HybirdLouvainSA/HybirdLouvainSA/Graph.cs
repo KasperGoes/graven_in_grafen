@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace communityDetection
+namespace HybridLouvainSA
 {
 	public class Graph
 	{

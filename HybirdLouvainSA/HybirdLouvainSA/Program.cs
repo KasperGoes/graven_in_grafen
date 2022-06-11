@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace communityDetection
+namespace HybridLouvainSA
 {
     internal class Program
     {
@@ -19,7 +19,7 @@ namespace communityDetection
             //Louvain.louvain(graph);
             //test_modularity(graph);
             float Result = SA.simulatedAnnealing(graph);
-            Console.WriteLine("finished simulated annealing");
+            Console.WriteLine("yeet");
         }
 
         static void set_initial_communities(Graph graph)

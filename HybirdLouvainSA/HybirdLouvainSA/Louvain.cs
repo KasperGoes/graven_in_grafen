@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace communityDetection
+namespace HybridLouvainSA
 {
 	public static class Louvain
 	{

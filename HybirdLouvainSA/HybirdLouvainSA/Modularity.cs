@@ -1,5 +1,6 @@
 ﻿using System;
-namespace communityDetection
+
+namespace HybridLouvainSA
 {
 	public static class Modularity
 	{

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace communityDetection
+namespace HybridLouvainSA
 {
 	public static class readGraphs
 	{
