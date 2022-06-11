@@ -16,8 +16,6 @@ namespace HybridLouvainSA
 	
 		public int[] community_per_vertex;
 
-		public Dictionary<int, Community> benchmark_communities;
-
 		public Dictionary<int,Community> communities;
 
 		public Graph(int n)
@@ -27,56 +25,26 @@ namespace HybridLouvainSA
 			AdjacencyMatrix = new int[n, n];
 
 			community_per_vertex = new int[n];
-			benchmark_communities = new Dictionary<int, Community>();
+			
 			communities = new Dictionary<int, Community>();
 		}
 
-		public void update_graph(Community community, Vertex vertex)
-		{
-			// Remove from old community
-			Community old_commmunity = this.communities[vertex.community];
-			old_commmunity.vertices.Remove(vertex.id);
-
-
-			//If the resulting community is empty, remove community from graph
-			if (this.communities[vertex.community].vertices.Count == 0)
-				this.communities.Remove(vertex.community);
-            else
+		public void set_initial_community_per_node()
+        {
+			// Create community for ever node
+			for (int i = 0; i < this.vertices.Length; i++)
             {
-				int edges_in_old_community = old_commmunity.update_sum_in(vertex);
-				old_commmunity.sum_in += edges_in_old_community;
-				old_commmunity.sum_tot -= vertex.degree;
-            }
+				this.communities.Add(i, new Community(i, this.vertices[i]));
 
-			// Add to new community
-			community.vertices.Add(vertex.id);
-			vertex.community = community.id;
+				HashSet<int> neighbours = new HashSet<int>();
 
-			int degree_in_community = community.update_sum_in(vertex);
-
-			// Update sums
-			community.sum_in += degree_in_community; // TO DO: instead of vertex degree sum over weights
-			community.sum_tot += + vertex.degree; // TO DO: instead of vertex degree sum over weights
-		}
-	}
-
-	public class Vertex
-	{
-		public int id;
-		public int degree;
-		public int community;
-		public List<int> neighbours;
-
-		public HashSet<int> original_vertices;
-
-		// TO DO: Add variable to compute the neighbouring communities and by which vertices those communtities are connected (Dict <int,list<int>)
-
-		public Vertex(int id, int community)
-		{
-			this.id = id;
-			this.community = community;
-			neighbours = new List<int>();
-			original_vertices = new HashSet<int>();
+				for(int j = 0; j < this.vertices[i].neighbours.Count; j++)
+                {
+					int neighbouring_v_com = this.vertices[i].neighbours[j];
+					int weight = this.AdjacencyMatrix[i, neighbouring_v_com];
+					communities[i].neighbouring_communities_sum_out[neighbouring_v_com] = (weight, new HashSet<int> { neighbouring_v_com });
+				}
+			}
 		}
 	}
 }

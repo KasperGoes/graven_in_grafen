@@ -36,7 +36,7 @@ namespace HybridLouvainSA
 		{
 			int degree = vertex.degree;
 
-			int degree_in_com = community.update_sum_in(vertex);
+			int degree_in_com = community.sum_in_community_per_vertex(g, vertex);
 
 			float first = ((float)community.sum_in + (2 * (float)degree_in_com)) / (2 * (float)g.m);
 			float second =  (float)Math.Pow(((( (float) community.sum_tot + (float)degree) / (2 * (float)g.m))), 2);

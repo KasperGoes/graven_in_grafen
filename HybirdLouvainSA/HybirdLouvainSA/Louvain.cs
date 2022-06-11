@@ -14,10 +14,9 @@ namespace HybridLouvainSA
 			// We will stop the louvain algorithm when 
 			while(change && g.vertices.Length < 1000)
             {
-				(Graph graph, bool test) = phase_one(g);
-
-				// NOG AANPASSEN VANWEGE NIEUWE VS
-				change = test;
+				Graph graph;
+				(graph, change) = phase_one(g);
+				
 				//Graph new_graph = phase_two(g);
 				//g = new_graph;
 			}
@@ -30,16 +29,17 @@ namespace HybridLouvainSA
 			// Boolean variable to check if the graph is changend during any of the iterations
 			bool change = false;
 
-			// Create community for ever node
-			for (int i = 0; i < g.vertices.Length; i++)
-				g.communities.Add(i, new Community(i, g.vertices[i]));
+			g.set_initial_community_per_node();
 
 			float modularity = Modularity.modularity(g);
 
 			// Create random order of vertices
-			List<int> order = Enumerable.Range(0, g.vertices.Length).ToList();
-			Random random = new Random();
-			List<int> random_order = order.OrderBy(x => random.Next()).ToList();
+			//List<int> order = Enumerable.Range(0, g.vertices.Length).ToList();
+			//Random random = new Random();
+			//List<int> random_order = order.OrderBy(x => random.Next()).ToList();
+
+			// TEMPORARY SAME ORDER VERTICES
+			List<int> random_order = Enumerable.Range(0, g.vertices.Length).ToList();
 
 			bool found_improvement_all_vertices = true;
 
@@ -81,7 +81,7 @@ namespace HybridLouvainSA
 					// If improvement found, update the corresponding community
 					if (found_improvement)
 					{
-						g.update_graph(g.communities[best_community], v);
+						v.switch_to_new_community(g, best_community);
 						modularity += max_gain;
 						found_improvement_all_vertices = true;
 						change = true;
@@ -106,6 +106,7 @@ namespace HybridLouvainSA
 
 				// Add original vertices from old graph to new vertex
 				// degree of vertex v
+				// Add new sum degrees vertex
 				
             }
 

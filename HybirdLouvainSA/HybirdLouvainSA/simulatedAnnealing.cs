@@ -15,7 +15,7 @@ namespace HybridLouvainSA
 
 			//vm veel te hoge temp met onze delta
 			double temperature = 1.00;
-			double epsilon = 0.1;
+			double epsilon = 0.4;
 			
 			while(temperature > epsilon)
 			{
@@ -29,7 +29,7 @@ namespace HybridLouvainSA
 				if(delta > 0)
 				{
 					//update graph
-					g.update_graph(community, vertex);
+					vertex.switch_to_new_community(g, community.id);
 				}
 				// if we dont improve we accept the change with a chance
 				else
@@ -40,7 +40,7 @@ namespace HybridLouvainSA
 					if (random_probability < Math.Exp(delta/temperature))
 					{
 						//update graph
-						g.update_graph(community, vertex);
+						vertex.switch_to_new_community(g, community.id);
 					}
 				}
 

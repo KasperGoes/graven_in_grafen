@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Collections.Generic;
 
 namespace HybridLouvainSA
 {
@@ -10,10 +11,10 @@ namespace HybridLouvainSA
 
 		public static void read_graph()
         {
-			Graph graph = create_graph(new StreamReader(file_edges), new StreamReader(file_partition));
+			(Graph graph, int[] benchmark_communities) = create_graph(new StreamReader(file_edges), new StreamReader(file_partition));
 		}
 
-		public static Graph create_graph(StreamReader readergraph, StreamReader readerpartition)
+		public static (Graph, int[]) create_graph(StreamReader readergraph, StreamReader readerpartition)
         {
 			string[] input = readergraph.ReadLine().Split(" ");
 
@@ -22,7 +23,9 @@ namespace HybridLouvainSA
 
 			Graph graph = new Graph(n);
 			graph.m = m;
-			Vertex[] vertices = graph.vertices; 
+			Vertex[] vertices = graph.vertices;
+
+			int[] benchmark_communities = new int[n];
 
 			for (int i = 0; i < n; i++)
 				vertices[i] = new Vertex(i, i);
@@ -40,26 +43,22 @@ namespace HybridLouvainSA
 						int neighbour = int.Parse(adjacencylist[j]) - 1;
 						graph.AdjacencyMatrix[i, neighbour] = 1;
 
-						//graph.AdjacenceList[i].Add(neighbour);
-
 						// TO DO: Add neighbours to vertex class
 						vertex.neighbours.Add(vertices[neighbour].id);
 						vertex.degree++;
+
+						// Initial degree of sums
+						vertex.sum_degrees++;
 					}
 				}
 
 				int community = int.Parse(readerpartition.ReadLine());
 
 				vertex.community = community;
-
-				// Add benchmark communities NOG CONTROLEREN!!!!!!
-				if (!graph.benchmark_communities.ContainsKey(community))
-					graph.benchmark_communities[community] = new Community(community, vertex);
-				else
-					graph.benchmark_communities[community].vertices.Add(vertex.id);
+				benchmark_communities[i] = community;
 			}
 
-			return graph;
+			return (graph, benchmark_communities);
 		}
 	}
 }
