@@ -1,5 +1,6 @@
 ﻿using System;
-using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace communityDetection
 {
@@ -13,7 +14,10 @@ namespace communityDetection
 			// We will stop the louvain algorithm when 
 			while(change && g.vertices.Length < 1000)
             {
-				(Graph graph, change) = phase_one(g);
+				(Graph graph, bool test) = phase_one(g);
+
+				// NOG AANPASSEN VANWEGE NIEUWE VS
+				change = test;
 				//Graph new_graph = phase_two(g);
 				//g = new_graph;
 			}

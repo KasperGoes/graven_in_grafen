@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+
 namespace communityDetection
 {
 	public static class readGraphs

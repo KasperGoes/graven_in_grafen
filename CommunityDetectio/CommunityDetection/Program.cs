@@ -12,13 +12,14 @@ namespace communityDetection
             string filename2 = "../../../graphs/kleine graaf partition.txt";
             StreamReader readeredges = new StreamReader(filename1);
             StreamReader readerpartition = new StreamReader(filename2);
-            Console.WriteLine(readeredges);
+           
             Graph graph = readGraphs.create_graph(readeredges, readerpartition);
-            //set_initial_communities(graph);
+            set_initial_communities(graph);
 
             //Louvain.louvain(graph);
             //test_modularity(graph);
             float Result = SA.simulatedAnnealing(graph);
+            Console.WriteLine("finished simulated annealing");
         }
 
         static void set_initial_communities(Graph graph)

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace communityDetection
 {
@@ -7,17 +8,17 @@ namespace communityDetection
 		public int n; // number of vertices
 		public int m; // number of edges
 
+		public float modularity;
+
 		public Vertex[] vertices; // all vertices in the graph
 		
 		public int[,] AdjacencyMatrix;
-		//public List<int>[] AdjacenceList;
-
+	
 		public int[] community_per_vertex;
+
 		public Dictionary<int, Community> benchmark_communities;
 
 		public Dictionary<int,Community> communities;
-
-		// TO DO: Add modularity
 
 		public Graph(int n)
 		{
@@ -32,13 +33,20 @@ namespace communityDetection
 
 		public void update_graph(Community community, Vertex vertex)
 		{
-			float modularitydiff = Modularity.modularity_difference(this, community, vertex);
 			// Remove from old community
-			this.communities[vertex.community].vertices.Remove(vertex.id);
+			Community old_commmunity = this.communities[vertex.community];
+			old_commmunity.vertices.Remove(vertex.id);
+
 
 			//If the resulting community is empty, remove community from graph
 			if (this.communities[vertex.community].vertices.Count == 0)
 				this.communities.Remove(vertex.community);
+            else
+            {
+				int edges_in_old_community = old_commmunity.update_sum_in(vertex);
+				old_commmunity.sum_in += edges_in_old_community;
+				old_commmunity.sum_tot -= vertex.degree;
+            }
 
 			// Add to new community
 			community.vertices.Add(vertex.id);
@@ -48,9 +56,7 @@ namespace communityDetection
 
 			// Update sums
 			community.sum_in += degree_in_community; // TO DO: instead of vertex degree sum over weights
-			community.sum_tot = community.sum_tot + vertex.degree; // TO DO: instead of vertex degree sum over weights
-
-			//Update oude community values 
+			community.sum_tot += + vertex.degree; // TO DO: instead of vertex degree sum over weights
 		}
 	}
 

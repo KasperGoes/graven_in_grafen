@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+
 namespace communityDetection
 {
 	public static class SA
@@ -71,8 +73,6 @@ namespace communityDetection
 
 				// Look at the neightbours of vertex and see if they have a different community
 				// TO DO: Random neighbour instead of first neighbour in the list
-				
-
 				
 				int random_neighbour_index = random.Next(v.neighbours.Count);
 				u = g.vertices[v.neighbours[random_neighbour_index]];
