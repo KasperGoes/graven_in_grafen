@@ -11,10 +11,8 @@ namespace HybridLouvainSA
 		public float modularity;
 
 		public Vertex[] vertices; // all vertices in the graph
-		
+
 		public int[,] AdjacencyMatrix;
-	
-		public int[] community_per_vertex;
 
 		public Dictionary<int,Community> communities;
 
@@ -23,9 +21,6 @@ namespace HybridLouvainSA
 			this.n = n;
 			vertices = new Vertex[n];
 			AdjacencyMatrix = new int[n, n];
-
-			community_per_vertex = new int[n];
-			
 			communities = new Dictionary<int, Community>();
 		}
 
@@ -36,13 +31,11 @@ namespace HybridLouvainSA
             {
 				this.communities.Add(i, new Community(i, this.vertices[i]));
 
-				HashSet<int> neighbours = new HashSet<int>();
-
 				for(int j = 0; j < this.vertices[i].neighbours.Count; j++)
                 {
 					int neighbouring_v_com = this.vertices[i].neighbours[j];
 					int weight = this.AdjacencyMatrix[i, neighbouring_v_com];
-					communities[i].neighbouring_communities_sum_out[neighbouring_v_com] = (weight, new HashSet<int> { neighbouring_v_com });
+					communities[i].neighbouring_communities.add_update_neighbouring_community(this, vertices[i].id ,vertices[i].id, neighbouring_v_com);
 				}
 			}
 		}

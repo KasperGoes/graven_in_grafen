@@ -9,7 +9,7 @@ import os
 number_graphs = 3
 sizes = [1000, 10000, 100000, 1000000]
 mus = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8]
-avg_degree = 8
+avg_degree = 20
 max_degree = 50
 node_degree_exponent = -2
 min_com_size = 10

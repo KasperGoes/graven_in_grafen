@@ -31,7 +31,7 @@ namespace HybridLouvainSA
 
 			g.set_initial_community_per_node();
 
-			float modularity = Modularity.modularity(g);
+			g.modularity = Modularity.modularity(g);
 
 			// Create random order of vertices
 			//List<int> order = Enumerable.Range(0, g.vertices.Length).ToList();
@@ -57,7 +57,7 @@ namespace HybridLouvainSA
 
 					// Acces random vertex
 					Vertex v = g.vertices[random_order[i]];
-					int best_community = -1;
+					Vertex best_neighbour = null;
 
 					// Compute best change in community if possible
 					// TO DO: check if already added to neighbouring community, create list of communities to check
@@ -73,7 +73,7 @@ namespace HybridLouvainSA
 						if (modularity_diff > max_gain)
 						{
 							max_gain = modularity_diff;
-							best_community = u.community;
+							best_neighbour = u;
 							found_improvement = true;
 						}
 					}
@@ -81,8 +81,8 @@ namespace HybridLouvainSA
 					// If improvement found, update the corresponding community
 					if (found_improvement)
 					{
-						v.switch_to_new_community(g, best_community);
-						modularity += max_gain;
+						v.switch_to_new_community(g, best_neighbour);
+						g.modularity += max_gain;
 						found_improvement_all_vertices = true;
 						change = true;
 					}

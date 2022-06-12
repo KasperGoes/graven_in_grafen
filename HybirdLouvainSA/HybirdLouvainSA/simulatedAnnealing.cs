@@ -22,14 +22,14 @@ namespace HybridLouvainSA
 				iteration++;
         		//get the next random permutation of distances 
 
-				(Community community, Vertex vertex) = compute_candadite(g);
-				float delta = Modularity.modularity_difference(g, community, vertex);
+				(Vertex n, Vertex vertex) = compute_candadite(g);
+				float delta = Modularity.modularity_difference(g, g.communities[n.community], vertex);
 				
 				//if we improve we accept the change
 				if(delta > 0)
 				{
 					//update graph
-					vertex.switch_to_new_community(g, community.id);
+					vertex.switch_to_new_community(g, n);
 				}
 				// if we dont improve we accept the change with a chance
 				else
@@ -40,7 +40,7 @@ namespace HybridLouvainSA
 					if (random_probability < Math.Exp(delta/temperature))
 					{
 						//update graph
-						vertex.switch_to_new_community(g, community.id);
+						vertex.switch_to_new_community(g, n);
 					}
 				}
 
@@ -58,7 +58,7 @@ namespace HybridLouvainSA
 		}
 
 		// generate the next iteration
-		public static (Community, Vertex) compute_candadite(Graph g)
+		public static (Vertex, Vertex) compute_candadite(Graph g)
 		{
 			//Graph candadite = g.Clone();
 			bool found_candidate = false;
@@ -81,7 +81,7 @@ namespace HybridLouvainSA
 				//bool found_candidate_neighbour = true;
 
 				if (u.community != v.community)
-				{ return (g.communities[u.community], v); }
+				{ return (u, v); }
              
 				// While neighbour u has the same community as v, try a new neighbour 
 				//while (u.community == v.community)
