@@ -32,31 +32,19 @@ namespace HybridLouvainSA
 		public void remove_update_neighbouring_community(Graph graph, int nc, int vertex, int neighbour_vertex)
 		{
 			// If the vertex is the only vertex that connects the neighbouring community, remove the entire neighbouring community
-            if (this.connecting_vertices[nc].Count == 1)
-            {
+			if (this.connecting_vertices[nc].Count == 1)
+			{
 				communtity_ids.Remove(nc);
 				// CHECK IF IT REMOVES BOTH KEY AND VALUE
 				connecting_vertices.Remove(nc);
 				total_weight.Remove(nc);
 			}
 			else
-            {
+			{
 				connecting_vertices[nc].Remove(vertex);
 				total_weight[nc] -= graph.AdjacencyMatrix[vertex, neighbour_vertex];
-            }
+			}
 		}
-
-		//private void update_neighbouring_community(Graph graph, Community neighbouring_com, int nc, Vertex vertex, int add_delete_factor)
-		//{
-		//	(int weight, HashSet<int> neighbours) = neighbouring_communities_sum_out[nc];
-		//	weight += graph.AdjacencyMatrix[nc, vertex.id] * add_delete_factor;
-		//	neighbouring_communities_sum_out[nc].Item2.Add(vertex.id);
-		//	neighbouring_communities_sum_out[nc] = (weight, neighbours);
-
-		//	(weight, neighbours) = neighbouring_com.neighbouring_communities_sum_out[this.id];
-		//	neighbouring_com.neighbouring_communities_sum_out[this.id].Item2.Add(vertex.id);
-		//	neighbouring_com.neighbouring_communities_sum_out[this.id] = (weight, neighbours);
-		//}
 	}
 }
 

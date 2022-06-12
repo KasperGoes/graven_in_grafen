@@ -17,8 +17,7 @@ namespace HybridLouvainSA
 				Graph graph;
 				(graph, change) = phase_one(g);
 				
-				//Graph new_graph = phase_two(g);
-				//g = new_graph;
+				graph = phase_two(g);
 			}
 
 			return g;
@@ -60,7 +59,6 @@ namespace HybridLouvainSA
 					Vertex best_neighbour = null;
 
 					// Compute best change in community if possible
-					// TO DO: check if already added to neighbouring community, create list of communities to check
 					foreach (int neighbour in v.neighbours)
 					{
 						Vertex u = g.vertices[neighbour];
@@ -104,13 +102,18 @@ namespace HybridLouvainSA
 				
 				graph.vertices[i] = vertex;
 
-				// Add original vertices from old graph to new vertex
-				// degree of vertex v
-				// Add new sum degrees vertex
-				
-            }
+				graph.AdjacencyMatrix[i, i] = 2 * old_graph.communities[i].sum_in;
 
-			return null;
+				foreach(int n in old_graph.communities[i].neighbouring_communities.communtity_ids)
+                {
+					vertex.neighbours.Add(n);
+					graph.AdjacencyMatrix[i, n] = old_graph.communities[i].neighbouring_communities.total_weight[n];
+					vertex.degree++;
+					vertex.sum_degrees += old_graph.communities[i].neighbouring_communities.total_weight[n];
+				}
+			}
+
+			return graph;
         }
 	}
 }

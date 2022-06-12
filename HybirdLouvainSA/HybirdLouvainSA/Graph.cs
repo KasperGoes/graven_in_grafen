@@ -30,12 +30,15 @@ namespace HybridLouvainSA
 			for (int i = 0; i < this.vertices.Length; i++)
             {
 				this.communities.Add(i, new Community(i, this.vertices[i]));
-
+                
 				for(int j = 0; j < this.vertices[i].neighbours.Count; j++)
                 {
 					int neighbouring_v_com = this.vertices[i].neighbours[j];
 					int weight = this.AdjacencyMatrix[i, neighbouring_v_com];
-					communities[i].neighbouring_communities.add_update_neighbouring_community(this, vertices[i].id ,vertices[i].id, neighbouring_v_com);
+
+					vertices[i].neighbouring_communities.add_update_neighbouring_community(this, neighbouring_v_com, neighbouring_v_com, vertices[i].id);
+
+					communities[i].neighbouring_communities.add_update_neighbouring_community(this, neighbouring_v_com, neighbouring_v_com, vertices[i].id);
 				}
 			}
 		}
