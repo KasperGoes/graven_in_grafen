@@ -35,8 +35,7 @@ namespace HybridLouvainSA
                 for (int j = 0; j < this.vertices[i].neighbours.Count; j++)
                 {
                     int vertex_in_nc = this.vertices[i].neighbours[j];
-                    //vertices[i].neighbouring_communities.add_update_neighbouring_community(this, neighbouring_v_com, neighbouring_v_com, vertices[i].id);
-
+                    
                     communities[i].neighbouring_communities.add_update_neighbouring_community(this, vertex_in_nc, vertex.id, vertex_in_nc);
                 }
             }

@@ -27,7 +27,7 @@ namespace HybridLouvainSA
 				}
 				else
 				{
-					delta = delta * 2*g.m;
+					delta = delta * 2* g.m;
 					double acceptProb = Math.Exp(delta/temperature);
 					double random_probability = random.NextDouble();
 

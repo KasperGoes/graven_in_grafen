@@ -19,7 +19,7 @@ namespace HybridLouvainSA
 		{
 			this.id = id;
 			this.vertices = new HashSet<int> { id };
-			this.sum_tot = v.degree;
+			this.sum_tot = v.degree + sum_in;
 			this.sum_in = sum_in;
 			this.neighbouring_communities = new NeighbouringCommunities(id);
 		}
@@ -50,7 +50,7 @@ namespace HybridLouvainSA
         public int sum_in_community_per_vertex(Graph graph, Vertex vertex)
 		{
 			int sum_in_com = 0;
-			for (int i = 0; i < vertex.degree; i++)
+			for (int i = 0; i < vertex.neighbours.Count; i++)
 				if (this.vertices.Contains(vertex.neighbours[i]))
 					sum_in_com += graph.AdjacencyMatrix[vertex.id, vertex.neighbours[i]];
 

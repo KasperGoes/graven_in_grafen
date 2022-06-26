@@ -33,14 +33,15 @@ namespace HybridLouvainSA
 			g.set_initial_community_per_node();
 
 			g.modularity = Modularity.modularity(g);
+            //Console.WriteLine(Modularity.modularity_over_com(g));
 
             // Create random order of vertices
-            List<int> order = Enumerable.Range(0, g.vertices.Length).ToList();
-            Random random = new Random();
-            List<int> random_order = order.OrderBy(x => random.Next()).ToList();
+            //List<int> order = Enumerable.Range(0, g.vertices.Length).ToList();
+            //Random random = new Random();
+            //List<int> random_order = order.OrderBy(x => random.Next()).ToList();
 
             // TEMPORARY SAME ORDER VERTICES
-            //List<int> random_order = Enumerable.Range(0, g.vertices.Length).ToList();
+            List<int> random_order = Enumerable.Range(0, g.vertices.Length).ToList();
 
             bool found_improvement_all_vertices = true;
 
@@ -68,7 +69,19 @@ namespace HybridLouvainSA
 						if (u.community == v.community)
 							continue;
 
-						float modularity_diff = Modularity.modularity_difference(g, g.communities[u.community], v);
+						float modularity_diff = 0;
+
+                        //removing
+                        if (g.communities[v.community].vertices.Count != 1)
+                        {
+                            float modularity_diff_remove = Modularity.modularity_difference_remove(g, g.communities[v.community], v);
+
+							//total
+                            modularity_diff = modularity_diff_remove;
+                        }
+
+                        //adding
+                        modularity_diff += Modularity.modularity_difference(g, g.communities[u.community], v);
 
 						if (modularity_diff > max_gain)
 						{
@@ -105,7 +118,7 @@ namespace HybridLouvainSA
 
             for (int i = 0; i < number_communities; i++)
             {
-				// TO DO: Adjust the id's of the communities and the new vertex id's
+				
 				int real_com_id = communities_array[i];
 				new_to_old_community_id.Add(real_com_id, i);
 
@@ -117,6 +130,7 @@ namespace HybridLouvainSA
 
 				graph.AdjacencyMatrix[i, i] = loop_degree;
 				graph.m += loop_degree;
+				//vertex.degree++;
 			}
 
 			for(int i = 0; i < number_communities; i++)
@@ -128,12 +142,11 @@ namespace HybridLouvainSA
                 {
 					int new_nc_id = new_to_old_community_id[n];
 
-					
-                    vertex.neighbours.Add(new_nc_id);
+					vertex.neighbours.Add(new_nc_id);
 
                     int weight = old_graph.communities[real_com_id].neighbouring_communities.total_weight[n];
 					graph.AdjacencyMatrix[i, new_nc_id] = weight;
-                    vertex.degree++;
+					vertex.degree += weight;
                     vertex.sum_degrees += old_graph.communities[real_com_id].neighbouring_communities.total_weight[n];
 
 					if (i < new_nc_id)

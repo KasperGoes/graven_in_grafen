@@ -43,7 +43,6 @@ namespace HybridLouvainSA
 						int neighbour = int.Parse(adjacencylist[j]) - 1;
 						graph.AdjacencyMatrix[i, neighbour] = 1;
 
-						// TO DO: Add neighbours to vertex class
 						vertex.neighbours.Add(vertices[neighbour].id);
 						vertex.degree++;
 
@@ -54,7 +53,6 @@ namespace HybridLouvainSA
 
 				int community = int.Parse(readerpartition.ReadLine());
 
-				vertex.community = community;
 				benchmark_communities[i] = community;
 			}
 
