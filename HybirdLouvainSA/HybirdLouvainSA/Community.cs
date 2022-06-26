@@ -15,24 +15,22 @@ namespace HybridLouvainSA
 
 		public NeighbouringCommunities neighbouring_communities;
 
-		public Community(int id, Vertex v)
+		public Community(int id, Vertex v, int sum_in)
 		{
 			this.id = id;
 			this.vertices = new HashSet<int> { id };
 			this.sum_tot = v.degree;
-			this.neighbouring_communities = new NeighbouringCommunities();
+			this.sum_in = sum_in;
+			this.neighbouring_communities = new NeighbouringCommunities(id);
 		}
 
 		// Update community where a vertex is removed from a community
-		public void update_old_community(Graph graph, Vertex vertex, Vertex neighbour)
+		public void remove_vertex(Graph graph, Vertex vertex)
         {
 			if (this.vertices.Count == 1)
                 graph.communities.Remove(vertex.community);
             else
             {
-				foreach (int nc in this.neighbouring_communities.communtity_ids)
-					neighbouring_communities.remove_update_neighbouring_community(graph, nc, vertex.id, neighbour.id);
-
 				this.vertices.Remove(vertex.id);
 				int sum_in_old_community = sum_in_community_per_vertex(graph, vertex);
                 this.sum_in -= sum_in_old_community;
@@ -41,15 +39,9 @@ namespace HybridLouvainSA
         }
 
         // Update community where a vertex is added to a community
-		public void update_new_community(Graph graph, Vertex vertex, Vertex neighbour)
+		public void add_vertex(Graph graph, Vertex vertex)
         { 
-            // All neighbouring communities from the vertex are added/updated for the neighbouring communities of the community
-            // Skip current community + old community 
-            foreach (int nc in vertex.neighbouring_communities.communtity_ids)
-    		    neighbouring_communities.add_update_neighbouring_community(graph, nc, vertex.id, neighbour.id);
-
 			this.vertices.Add(vertex.id);
-
 			int sum_in_new_com = sum_in_community_per_vertex(graph, vertex);
 			this.sum_in += sum_in_new_com;
 			this.sum_tot += vertex.degree;

@@ -16,7 +16,7 @@ namespace HybridLouvainSA
             (Graph graph, int[] benchmark_communities) = readGraphs.create_graph(readeredges, readerpartition);
             //set_initial_communities(graph);
 
-            Louvain.louvain(graph);
+            graph = Louvain.louvain(graph);
             //test_modularity(graph);
             //float Result = SA.simulatedAnnealing(graph);
             Console.WriteLine("finished");

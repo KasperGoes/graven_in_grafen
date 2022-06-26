@@ -5,44 +5,46 @@ namespace HybridLouvainSA
 {
 	public class NeighbouringCommunities
 	{
+		int com;
 		public HashSet<int> communtity_ids;
-		public Dictionary<int, HashSet<int>> connecting_vertices;
+		public Dictionary<int, HashSet<(int,int)>> connecting_edges;
 		public Dictionary<int, int> total_weight;
 
-		public NeighbouringCommunities()
+		public NeighbouringCommunities(int com)
 		{
+			this.com = com;
 			this.communtity_ids = new HashSet<int>();
-			this.connecting_vertices = new Dictionary<int, HashSet<int>>();
+			this.connecting_edges = new Dictionary<int, HashSet<(int,int)>>();
 			this.total_weight = new Dictionary<int, int>();
 		}
 
-		public void add_update_neighbouring_community(Graph graph, int nc, int vertex, int neighbour_vertex)
+		public void add_update_neighbouring_community(Graph graph, int nc, int vertex, int vertex_in_nc)
 		{
 			if(!this.communtity_ids.Contains(nc))
             {
 				this.communtity_ids.Add(nc);
-				this.connecting_vertices[nc] = new HashSet<int>();
+				this.connecting_edges[nc] = new HashSet<(int, int)>();
 				this.total_weight[nc] = 0;
 			}
 
-			connecting_vertices[nc].Add(vertex);
-			total_weight[nc] += graph.AdjacencyMatrix[vertex, neighbour_vertex];
+			//com_edge edge = new com_edge(vertex, vertex_in_nc);
+            connecting_edges[nc].Add((vertex,vertex_in_nc));
+			total_weight[nc] += graph.AdjacencyMatrix[vertex, vertex_in_nc]; //this is not correct, 
 		}
 
-		public void remove_update_neighbouring_community(Graph graph, int nc, int vertex, int neighbour_vertex)
+		public void remove_update_neighbouring_community(Graph graph, int nc, int vertex, int vertex_in_nc)
 		{
 			// If the vertex is the only vertex that connects the neighbouring community, remove the entire neighbouring community
-			if (this.connecting_vertices[nc].Count == 1)
+			if (this.connecting_edges[nc].Count == 1)
 			{
 				communtity_ids.Remove(nc);
-				// CHECK IF IT REMOVES BOTH KEY AND VALUE
-				connecting_vertices.Remove(nc);
+                connecting_edges.Remove(nc);
 				total_weight.Remove(nc);
 			}
 			else
 			{
-				connecting_vertices[nc].Remove(vertex);
-				total_weight[nc] -= graph.AdjacencyMatrix[vertex, neighbour_vertex];
+                connecting_edges[nc].Remove((vertex, vertex_in_nc));
+				total_weight[nc] -= graph.AdjacencyMatrix[vertex, vertex_in_nc];
 			}
 		}
 	}

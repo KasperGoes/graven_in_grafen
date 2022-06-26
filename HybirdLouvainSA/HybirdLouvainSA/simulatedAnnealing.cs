@@ -23,7 +23,7 @@ namespace HybridLouvainSA
 				
 				if(delta > 0)
 				{
-					vertex.switch_to_new_community(g, n);
+					vertex.switch_community(n.community);
 				}
 				else
 				{
@@ -33,7 +33,7 @@ namespace HybridLouvainSA
 
 					if (random_probability < Math.Exp(delta/temperature))
 					{ 
-						vertex.switch_to_new_community(g, n);
+						vertex.switch_community(n.community);
 					}
 				}
 
@@ -56,6 +56,7 @@ namespace HybridLouvainSA
 			bool found_candidate = false;
 			Vertex v, u;
 
+			// TO DO: Use the communities and their neighbouring communities to swap vertices instead of picking random vertices
 			while(!found_candidate)
             {
 				// We pick a random vertex

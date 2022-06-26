@@ -16,8 +16,10 @@ namespace HybridLouvainSA
             {
 				Graph graph;
 				(graph, change) = phase_one(g);
-				
-				graph = phase_two(g);
+				if (!change)
+					return graph;
+
+				g = phase_two(graph);
 			}
 
 			return g;
@@ -32,18 +34,17 @@ namespace HybridLouvainSA
 
 			g.modularity = Modularity.modularity(g);
 
-			// Create random order of vertices
-			//List<int> order = Enumerable.Range(0, g.vertices.Length).ToList();
-			//Random random = new Random();
-			//List<int> random_order = order.OrderBy(x => random.Next()).ToList();
+            // Create random order of vertices
+            List<int> order = Enumerable.Range(0, g.vertices.Length).ToList();
+            Random random = new Random();
+            List<int> random_order = order.OrderBy(x => random.Next()).ToList();
 
-			// TEMPORARY SAME ORDER VERTICES
-			List<int> random_order = Enumerable.Range(0, g.vertices.Length).ToList();
+            // TEMPORARY SAME ORDER VERTICES
+            //List<int> random_order = Enumerable.Range(0, g.vertices.Length).ToList();
 
-			bool found_improvement_all_vertices = true;
+            bool found_improvement_all_vertices = true;
 
 			// While improvement is possible
-			// TO DO: use threshold for modularity improvement 
 			while (found_improvement_all_vertices)
 			{
 				found_improvement_all_vertices = false;
@@ -51,7 +52,8 @@ namespace HybridLouvainSA
 				// Loop through all vertices in random order
 				for (int i = 0; i < g.vertices.Length; i++)
 				{
-					float max_gain = 0;
+					// Set gain to a treshold
+					float max_gain = 0.000001F;
 					bool found_improvement = false;
 
 					// Acces random vertex
@@ -77,10 +79,11 @@ namespace HybridLouvainSA
 					}
 
 					// If improvement found, update the corresponding community
-					if (found_improvement)
+					if(found_improvement)
 					{
-						v.switch_to_new_community(g, best_neighbour);
-						g.modularity += max_gain;
+						g.update_all_neighbouring_communities(v, best_neighbour);
+						g.switch_to_community(v, best_neighbour);
+                        g.modularity += max_gain;
 						found_improvement_all_vertices = true;
 						change = true;
 					}
@@ -90,31 +93,56 @@ namespace HybridLouvainSA
 			return (g, change);
 		}
 
-		private static Graph phase_two(Graph old_graph)
+        private static Graph phase_two(Graph old_graph)
         {
-			int number_communities = old_graph.communities.Count;
+            int number_communities = old_graph.communities.Count;
 
-			Graph graph = new Graph(number_communities);
+            Graph graph = new Graph(number_communities);
+
+			//UGLY FIX
+			int[] communities_array = old_graph.communities.Keys.ToArray<int>();
+			Dictionary<int, int> new_to_old_community_id = new Dictionary<int, int>();
+
+            for (int i = 0; i < number_communities; i++)
+            {
+				// TO DO: Adjust the id's of the communities and the new vertex id's
+				int real_com_id = communities_array[i];
+				new_to_old_community_id.Add(real_com_id, i);
+
+                Vertex vertex = new Vertex(i, i);
+
+                graph.vertices[i] = vertex;
+
+				int loop_degree = 2 * old_graph.communities[real_com_id].sum_in;
+
+				graph.AdjacencyMatrix[i, i] = loop_degree;
+				graph.m += loop_degree;
+			}
 
 			for(int i = 0; i < number_communities; i++)
             {
-				Vertex vertex = new Vertex(i, i);
-				
-				graph.vertices[i] = vertex;
+                int real_com_id = communities_array[i];
+				Vertex vertex = graph.vertices[i];
 
-				graph.AdjacencyMatrix[i, i] = 2 * old_graph.communities[i].sum_in;
-
-				foreach(int n in old_graph.communities[i].neighbouring_communities.communtity_ids)
+                foreach (int n in old_graph.communities[real_com_id].neighbouring_communities.communtity_ids)
                 {
-					vertex.neighbours.Add(n);
-					graph.AdjacencyMatrix[i, n] = old_graph.communities[i].neighbouring_communities.total_weight[n];
-					vertex.degree++;
-					vertex.sum_degrees += old_graph.communities[i].neighbouring_communities.total_weight[n];
-				}
-			}
+					int new_nc_id = new_to_old_community_id[n];
 
-			return graph;
+					
+                    vertex.neighbours.Add(new_nc_id);
+
+                    int weight = old_graph.communities[real_com_id].neighbouring_communities.total_weight[n];
+					graph.AdjacencyMatrix[i, new_nc_id] = weight;
+                    vertex.degree++;
+                    vertex.sum_degrees += old_graph.communities[real_com_id].neighbouring_communities.total_weight[n];
+
+					if (i < new_nc_id)
+						graph.m += weight;
+                }
+            }
+
+            return graph;
         }
-	}
+    }
 }
 
