@@ -19,8 +19,8 @@ namespace HybridLouvainSA
 		{
 			this.id = id;
 			this.vertices = new HashSet<int> { id };
-			this.sum_tot = v.degree + sum_in;
-			this.sum_in = sum_in;
+			this.sum_tot = v.degree;
+			this.sum_in = sum_in * 2;
 			this.neighbouring_communities = new NeighbouringCommunities(id);
 		}
 

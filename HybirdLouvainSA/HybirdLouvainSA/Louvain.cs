@@ -32,8 +32,7 @@ namespace HybridLouvainSA
 
 			g.set_initial_community_per_node();
 
-			g.modularity = Modularity.modularity(g);
-            //Console.WriteLine(Modularity.modularity_over_com(g));
+			g.modularity = Modularity.mod2(g);
 
             // Create random order of vertices
             //List<int> order = Enumerable.Range(0, g.vertices.Length).ToList();
@@ -69,19 +68,7 @@ namespace HybridLouvainSA
 						if (u.community == v.community)
 							continue;
 
-						float modularity_diff = 0;
-
-                        //removing
-                        if (g.communities[v.community].vertices.Count != 1)
-                        {
-                            float modularity_diff_remove = Modularity.modularity_difference_remove(g, g.communities[v.community], v);
-
-							//total
-                            modularity_diff = modularity_diff_remove;
-                        }
-
-                        //adding
-                        modularity_diff += Modularity.modularity_difference(g, g.communities[u.community], v);
+						float modularity_diff = Modularity.modularity_difference(g, g.communities[u.community], v);
 
 						if (modularity_diff > max_gain)
 						{
@@ -112,25 +99,26 @@ namespace HybridLouvainSA
 
             Graph graph = new Graph(number_communities);
 
-			//UGLY FIX
 			int[] communities_array = old_graph.communities.Keys.ToArray<int>();
 			Dictionary<int, int> new_to_old_community_id = new Dictionary<int, int>();
 
             for (int i = 0; i < number_communities; i++)
             {
-				
 				int real_com_id = communities_array[i];
 				new_to_old_community_id.Add(real_com_id, i);
 
                 Vertex vertex = new Vertex(i, i);
 
+				foreach (int v in old_graph.communities[real_com_id].vertices)
+					vertex.original_vertices.Add(v);
+				
                 graph.vertices[i] = vertex;
 
 				int loop_degree = 2 * old_graph.communities[real_com_id].sum_in;
 
 				graph.AdjacencyMatrix[i, i] = loop_degree;
 				graph.m += loop_degree;
-				//vertex.degree++;
+				vertex.degree += loop_degree * 2;
 			}
 
 			for(int i = 0; i < number_communities; i++)
@@ -149,12 +137,11 @@ namespace HybridLouvainSA
 					vertex.degree += weight;
                     vertex.sum_degrees += old_graph.communities[real_com_id].neighbouring_communities.total_weight[n];
 
-					if (i < new_nc_id)
-						graph.m += weight;
+                    if (i < new_nc_id)
+                        graph.m += weight;
                 }
             }
-
-            return graph;
+                return graph;
         }
     }
 }

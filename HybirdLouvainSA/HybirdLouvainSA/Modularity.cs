@@ -14,13 +14,34 @@ namespace HybridLouvainSA
 
 				for(int j = 0; j < g.n; j++)
                 {
-					Vertex u = g.vertices[j];
+                    int factor = 1;
 
-                    modularity += (g.AdjacencyMatrix[v.id, u.id] - ((float)v.degree * (float)u.degree / (float)(2 * g.m))) * delta(v, u) ;
+                    if (i == j)
+                        factor = 2;
+
+                    Vertex u = g.vertices[j];
+
+					modularity += (factor * g.AdjacencyMatrix[v.id, u.id] - ((float)v.degree * (float)u.degree / (float)(2 * g.m))) * delta(v, u) ;
                 }
             }
 
 			modularity = modularity / (2 * (float)g.m);
+
+			return modularity;
+        }
+
+		public static float mod2(Graph g)
+        {
+			float modularity = 0;
+
+			foreach(Community com in g.communities.Values)
+            {
+				float lc = com.sum_in / 2;
+				float m = g.m;
+				float kc = com.sum_tot;
+
+				modularity += (lc / m) - (float)Math.Pow(kc / (2 * m),2);
+            }
 
 			return modularity;
         }
@@ -34,37 +55,45 @@ namespace HybridLouvainSA
 		}
 
 		public static float modularity_difference(Graph g, Community community, Vertex vertex)
+        {
+			float add = modularity_difference_add(g, community, vertex);
+			float remove = modularity_difference_remove(g, g.communities[vertex.community], vertex);
+
+			return add - remove;
+        }
+
+
+        private static float modularity_difference_add(Graph g, Community community, Vertex vertex)
 		{
 			int degree = vertex.degree;
-
 			int degree_in_com = community.sum_in_community_per_vertex(g, vertex);
+			float sum_in = community.sum_in;
+			float sum_tot = community.sum_tot;
 
-			float first = ((float)community.sum_in + (2*(float)degree_in_com)) / (2 * (float)g.m);
-			float second =  (float)Math.Pow(((( (float) community.sum_tot + (float)degree) / (2 * (float)g.m))), 2);
-			float third = (float) community.sum_in / (2 * (float)g.m);
-			float fourth = (float) Math.Pow(((float)community.sum_tot / (2 * (float)g.m)), 2);
-			float fifth = (float) Math.Pow((degree / (float)(2 * (float)g.m)), 2);
+			float modularity_difference = mod_diff(g.m, degree, degree_in_com, sum_in, sum_tot);
 
-			float modularity_difference = (first - second) - (third - fourth - fifth);
-
-			return modularity_difference;
+            return modularity_difference;
 		}
 
-		public static float modularity_difference_remove(Graph g, Community community, Vertex vertex)
+		private static float modularity_difference_remove(Graph g, Community community, Vertex vertex)
         {
-			// TO DO: We need to model the modularity change when a vertex is removed from it's old community
-			// Expect that we need to recompute the sum_in, sum_out, before/after removing?
-			// TO DO: Read Louvain section in Networks Book
+            int degree = vertex.degree;
+            int degree_in_com = community.sum_in_community_per_vertex(g, vertex);
+            float sum_in = (float)community.sum_in - degree_in_com;
+            float sum_tot = community.sum_tot - degree;
 
-			int degree = vertex.degree;
+            float modularity_difference = mod_diff(g.m, degree, degree_in_com, sum_in, sum_tot) ;
 
-			int degree_in_com = 0;//community.sum_in_community_per_vertex(g, vertex);
+			return modularity_difference;
+        }
 
-            float first = ((float)community.sum_in + (2 * (float)degree_in_com)) / (2 * (float)g.m);
-            float second = (float)Math.Pow(((((float)community.sum_tot + (float)degree) / (2 * (float)g.m))), 2);
-            float third = (float)community.sum_in / (2 * (float)g.m);
-            float fourth = (float)Math.Pow(((float)community.sum_tot / (2 * (float)g.m)), 2);
-            float fifth = (float)Math.Pow((degree / (float)(2 * (float)g.m)), 2);
+		private static float mod_diff(float m, float degree, float degree_in_com, float sum_in, float sum_tot)
+        {
+            float first = (sum_in + (2 * (float)degree_in_com)) / (2 * m);
+            float second = (float)Math.Pow((sum_tot + (float)degree) / (2 * m), 2);
+            float third = sum_in / (2 * m);
+            float fourth = (float)Math.Pow(sum_tot / (2 * m), 2);
+            float fifth = (float)Math.Pow(degree / (2 * m), 2);
 
             float modularity_difference = (first - second) - (third - fourth - fifth);
 
