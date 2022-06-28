@@ -8,14 +8,14 @@ namespace HybridLouvainSA
 		int com;
 		public RandomList<int> communtity_ids;
 
-		public Dictionary<int, HashSet<(int,int)>> connecting_edges;
+		public Dictionary<int, RandomList<(int,int)>> connecting_edges;
 		public Dictionary<int, int> total_weight;
 
 		public NeighbouringCommunities(int com)
 		{
 			this.com = com;
 			this.communtity_ids = new RandomList<int>();
-			this.connecting_edges = new Dictionary<int, HashSet<(int,int)>>();
+			this.connecting_edges = new Dictionary<int, RandomList<(int,int)>>();
 			this.total_weight = new Dictionary<int, int>();
 		}
 
@@ -24,7 +24,7 @@ namespace HybridLouvainSA
 			if(!this.connecting_edges.ContainsKey(nc))
             {
 				this.communtity_ids.Add(nc);
-				this.connecting_edges[nc] = new HashSet<(int, int)>();
+				this.connecting_edges[nc] = new RandomList<(int, int)>();
 				this.total_weight[nc] = 0;
 			}
 

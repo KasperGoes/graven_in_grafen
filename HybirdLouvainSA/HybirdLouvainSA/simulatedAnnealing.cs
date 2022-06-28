@@ -18,12 +18,18 @@ namespace HybridLouvainSA
 			
 			while(temperature > epsilon)
 			{
-				(Vertex n, Vertex vertex) = compute_candadite(g);
-				float delta = Modularity.modularity_difference(g, g.communities[n.community], vertex);
+				(int n, int vertex) = compute_candadite(g);
+
+				Vertex v_in_com = g.vertices[n];
+				Vertex v_to_move = g.vertices[vertex];
+
+				int new_community = v_in_com.community;
+
+				float delta = Modularity.modularity_difference(g, g.communities[new_community], v_to_move);
 				
 				if(delta > 0)
 				{
-					vertex.switch_community(n.community);
+					v_to_move.switch_community(new_community);
 				}
 				else
 				{
@@ -33,7 +39,7 @@ namespace HybridLouvainSA
 
 					if (random_probability < Math.Exp(delta/temperature))
 					{ 
-						vertex.switch_community(n.community);
+						v_to_move.switch_community(new_community);
 					}
 				}
 
@@ -51,31 +57,18 @@ namespace HybridLouvainSA
 			return Modularity.modularity(g);
 		}
 
-		private static (Vertex, Vertex) compute_candadite(Graph g)
+		private static (int, int) compute_candadite(Graph g)
 		{
+			int random_com = g.community_list.get_random_element();
 
-		//	int random_com = g.community_list.get_random_element();
+			Community community = g.communities[random_com];
 
-		//	// TO DO: Use the communities and their neighbouring communities to swap vertices instead of picking random vertices
-		//	while(!found_candidate)
-  //          {
-		//		// We pick a random vertex
-		//		int number = random.Next(g.vertices.Length);
-		//		v = g.vertices[number];
+			int random_nc = community.neighbouring_communities.communtity_ids.get_random_element();
 
-		//		// Look at the neightbours of vertex and see if they have a different community
-		//		// TO DO: Change neighbour solution to picking random community and a random neighbouring community with vertex
-		//		int random_neighbour_index = random.Next(v.neighbours.Count);
-		//		u = g.vertices[v.neighbours[random_neighbour_index]];
+			(int vertex_in_com, int vertex_in_nc) = community.neighbouring_communities.connecting_edges[random_nc].get_random_element();
 
-		//		if (u.community != v.community)
-		//		{ return (u, v); }
-		//	}
-
-			return (null, null);
+			return (vertex_in_com, vertex_in_nc);
 		}
-
-		
 	}
 }
 
