@@ -14,14 +14,15 @@ namespace HybridLouvainSA
 
 		public List<int> neighbours;
 
-		public HashSet<int> original_vertices;
+		public LinkedList original_vertices;
 
 		public Vertex(int id, int community)
 		{
 			this.id = id;
 			this.community = community;
 			this.neighbours = new List<int>();
-			this.original_vertices = new HashSet<int>();
+			this.original_vertices = new LinkedList();
+			original_vertices.Add(id);
 		}
 
 		public void switch_community(int new_community)

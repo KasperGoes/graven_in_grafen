@@ -16,12 +16,15 @@ namespace HybridLouvainSA
 
         public Dictionary<int, Community> communities;
 
+        public Dictionary<int, int> partition;
+
         public Graph(int n)
         {
             this.n = n;
             vertices = new Vertex[n];
             AdjacencyMatrix = new int[n, n];
             communities = new Dictionary<int, Community>();
+            partition = new Dictionary<int, int>();
         }
 
         public void set_initial_community_per_node()
@@ -88,6 +91,15 @@ namespace HybridLouvainSA
                     new_community.neighbouring_communities.add_update_neighbouring_community(this, u.community, vertex_swap.id, u.id);
                 }
             }
+        }
+
+        public void set_partition()
+        {
+            for (int i = 0; i < vertices.Length; i++)
+            {
+                Vertex vertex = vertices[i];
+                vertex.original_vertices.add_to_partition(vertex.community, partition);
+            }  
         }
     }
 }

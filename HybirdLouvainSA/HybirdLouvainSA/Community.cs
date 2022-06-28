@@ -11,7 +11,7 @@ namespace HybridLouvainSA
 		public HashSet<int> vertices;
 
 		// Set to collect all original vertex id's 
-		public HashSet<int> og_vertices;
+		public LinkedList<int> og_vertices;
 
 		public NeighbouringCommunities neighbouring_communities;
 

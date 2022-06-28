@@ -9,12 +9,7 @@ namespace HybridLouvainSA
 		static string file_edges = "../../../graphs/smallgraph_graph_edges.txt";
 		static string file_partition = "../../../graphs/smallgraph_graph_partition.txt";
 
-		public static void read_graph()
-        {
-			(Graph graph, int[] benchmark_communities) = create_graph(new StreamReader(file_edges), new StreamReader(file_partition));
-		}
-
-		public static (Graph, int[]) create_graph(StreamReader readergraph, StreamReader readerpartition)
+		public static (Graph, Dictionary<int,int>) create_graph(StreamReader readergraph, StreamReader readerpartition)
         {
 			string[] input = readergraph.ReadLine().Split(" ");
 
@@ -25,7 +20,7 @@ namespace HybridLouvainSA
 			graph.m = m;
 			Vertex[] vertices = graph.vertices;
 
-			int[] benchmark_communities = new int[n];
+			Dictionary<int, int> benchmark_partition = new Dictionary<int, int>();
 
 			for (int i = 0; i < n; i++)
 				vertices[i] = new Vertex(i, i);
@@ -53,10 +48,10 @@ namespace HybridLouvainSA
 
 				int community = int.Parse(readerpartition.ReadLine());
 
-				benchmark_communities[i] = community;
+				benchmark_partition[i] = community;
 			}
 
-			return (graph, benchmark_communities);
+			return (graph, benchmark_partition);
 		}
 	}
 }

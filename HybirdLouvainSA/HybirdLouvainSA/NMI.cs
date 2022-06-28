@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace HybridLouvainSA
 {
 	public static class NMI
 	{
-		public static float nmi(Graph graph, int[] benchmark_communities)
+		public static float nmi(Dictionary<int,int> partition, Dictionary<int,int> real_partition)
         {
 			return 0F;
 		}
