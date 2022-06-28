@@ -51,29 +51,31 @@ namespace HybridLouvainSA
 			return Modularity.modularity(g);
 		}
 
-		public static (Vertex, Vertex) compute_candadite(Graph g)
+		private static (Vertex, Vertex) compute_candadite(Graph g)
 		{
-			bool found_candidate = false;
-			Vertex v, u;
 
-			// TO DO: Use the communities and their neighbouring communities to swap vertices instead of picking random vertices
-			while(!found_candidate)
-            {
-				// We pick a random vertex
-				int number = random.Next(g.vertices.Length);
-				v = g.vertices[number];
+		//	int random_com = g.community_list.get_random_element();
 
-				// Look at the neightbours of vertex and see if they have a different community
-				// TO DO: Change neighbour solution to picking random community and a random neighbouring community with vertex
-				int random_neighbour_index = random.Next(v.neighbours.Count);
-				u = g.vertices[v.neighbours[random_neighbour_index]];
+		//	// TO DO: Use the communities and their neighbouring communities to swap vertices instead of picking random vertices
+		//	while(!found_candidate)
+  //          {
+		//		// We pick a random vertex
+		//		int number = random.Next(g.vertices.Length);
+		//		v = g.vertices[number];
 
-				if (u.community != v.community)
-				{ return (u, v); }
-			}
+		//		// Look at the neightbours of vertex and see if they have a different community
+		//		// TO DO: Change neighbour solution to picking random community and a random neighbouring community with vertex
+		//		int random_neighbour_index = random.Next(v.neighbours.Count);
+		//		u = g.vertices[v.neighbours[random_neighbour_index]];
+
+		//		if (u.community != v.community)
+		//		{ return (u, v); }
+		//	}
 
 			return (null, null);
 		}
+
+		
 	}
 }
 

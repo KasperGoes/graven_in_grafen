@@ -28,7 +28,10 @@ namespace HybridLouvainSA
 		public void remove_vertex(Graph graph, Vertex vertex)
         {
 			if (this.vertices.Count == 1)
+            {
                 graph.communities.Remove(vertex.community);
+				graph.community_list.Remove(vertex.community);
+            } 
             else
             {
 				this.vertices.Remove(vertex.id);

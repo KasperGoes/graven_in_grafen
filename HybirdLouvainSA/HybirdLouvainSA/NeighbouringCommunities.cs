@@ -6,29 +6,29 @@ namespace HybridLouvainSA
 	public class NeighbouringCommunities
 	{
 		int com;
-		public HashSet<int> communtity_ids;
+		public RandomList<int> communtity_ids;
+
 		public Dictionary<int, HashSet<(int,int)>> connecting_edges;
 		public Dictionary<int, int> total_weight;
 
 		public NeighbouringCommunities(int com)
 		{
 			this.com = com;
-			this.communtity_ids = new HashSet<int>();
+			this.communtity_ids = new RandomList<int>();
 			this.connecting_edges = new Dictionary<int, HashSet<(int,int)>>();
 			this.total_weight = new Dictionary<int, int>();
 		}
 
 		public void add_update_neighbouring_community(Graph graph, int nc, int vertex, int vertex_in_nc)
 		{
-			if(!this.communtity_ids.Contains(nc))
+			if(!this.connecting_edges.ContainsKey(nc))
             {
 				this.communtity_ids.Add(nc);
 				this.connecting_edges[nc] = new HashSet<(int, int)>();
 				this.total_weight[nc] = 0;
 			}
 
-			//com_edge edge = new com_edge(vertex, vertex_in_nc);
-            connecting_edges[nc].Add((vertex,vertex_in_nc));
+			connecting_edges[nc].Add((vertex,vertex_in_nc));
 			total_weight[nc] += graph.AdjacencyMatrix[vertex, vertex_in_nc]; //this is not correct, 
 		}
 

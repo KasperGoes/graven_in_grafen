@@ -134,8 +134,11 @@ namespace HybridLouvainSA
                 Community community = old_graph.communities[real_com_id];
                 Vertex vertex = graph.vertices[i];
 
-                foreach (int n in community.neighbouring_communities.communtity_ids)
+				RandomList<int> communities = community.neighbouring_communities.communtity_ids;
+
+                for (int j = 0; j < communities.Count; j++)
                 {
+					int n = communities.list[j];
 					int new_nc_id = new_to_old_community_id[n];
 
 					vertex.neighbours.Add(new_nc_id);

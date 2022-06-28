@@ -30,17 +30,5 @@ namespace HybridLouvainSA
 			this.community = new_community;
 		}
     }
-
-	public struct com_edge
-    {
-		public int in_com;
-		public int out_com;
-
-		public com_edge(int inc, int outc)
-        {
-			this.in_com = inc;
-			this.out_com = outc;
-        }
-    }
 }
 
