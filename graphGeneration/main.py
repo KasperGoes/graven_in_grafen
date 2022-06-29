@@ -4,6 +4,8 @@ import generatingGraphs as gg
 import networkit as nk
 import community as community_louvain
 import os
+import networkx as nx
+import matplotlib.pyplot as plt
 
 # Initialize parameters
 number_graphs = 3
@@ -50,11 +52,18 @@ def write_one_graph(graph, partition, filename):
 
 # write_graphs(sizes, mus, number_graphs, all_graphs)
 
-smallgraph, partition = gg.small_graph()
-write_one_graph(smallgraph, partition, "smallgraph")
+# smallgraph, partition = gg.one_graph()
+# write_one_graph(smallgraph, partition, "smallgraph")
 
+smallgraph = nk.readGraph("smallgraph_graph_edges.txt", nk.Format.METIS)
+nx.draw_networkx(nk.nxadapter.nk2nx(smallgraph))
+plt.show()
 
 def louvain(graph):
     graphx = nk.nxadapter.nk2nx(graph)
     partition = community_louvain.best_partition(graphx)
     print(community.modularity(partition, graphx))
+    print(partition)
+
+louvain(smallgraph)
+print("finished")

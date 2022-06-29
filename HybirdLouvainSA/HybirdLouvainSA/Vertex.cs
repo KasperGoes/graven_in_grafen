@@ -8,8 +8,6 @@ namespace HybridLouvainSA
 		public int id;
 		public int degree;
 
-		public int sum_degrees;
-
 		public int community;
 
 		public List<int> neighbours;

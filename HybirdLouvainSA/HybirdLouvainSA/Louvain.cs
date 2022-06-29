@@ -12,7 +12,7 @@ namespace HybridLouvainSA
 			bool change = true;
 
 			// We will stop the louvain algorithm when 
-			while(change && g.vertices.Length < 1000)
+			while(change)
             {
 				Graph graph;
 				(graph, change) = phase_one(g);
@@ -146,8 +146,7 @@ namespace HybridLouvainSA
                     int weight = community.neighbouring_communities.total_weight[n];
 					graph.AdjacencyMatrix[i, new_nc_id] = weight;
 					vertex.degree += weight;
-                    vertex.sum_degrees += community.neighbouring_communities.total_weight[n];
-
+                    
                     if (i < new_nc_id)
                         graph.m += weight;
                 }

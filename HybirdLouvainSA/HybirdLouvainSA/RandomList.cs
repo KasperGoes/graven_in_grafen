@@ -61,8 +61,11 @@ namespace HybridLouvainSA
             list[j] = temp;
         }
 
-        public T get_random_element()
+        public dynamic get_random_element()
         {
+            if (last_index == -1)
+                return false;
+
             int random_index = random.Next(last_index + 1);
             T value = list[random_index];
 

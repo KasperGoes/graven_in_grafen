@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace HybridLouvainSA
 {
@@ -30,7 +31,42 @@ namespace HybridLouvainSA
 			return modularity;
         }
 
-		public static float mod2(Graph g)
+        public static float modularity_given_partition(Graph g, Dictionary<int,int> partition)
+        {
+            float modularity = 0;
+
+            for (int i = 0; i < g.n; i++)
+            {
+                Vertex v = g.vertices[i];
+
+                for (int j = 0; j < g.n; j++)
+                {
+                    int factor = 1;
+
+                    if (i == j)
+                        factor = 2;
+
+                    Vertex u = g.vertices[j];
+
+                    modularity += (factor * g.AdjacencyMatrix[v.id, u.id] - ((float)v.degree * (float)u.degree / (float)(2 * g.m))) * delta(partition, v, u);
+                }
+            }
+
+            modularity = modularity / (2 * (float)g.m);
+
+            return modularity;
+        }
+
+        public static int delta(Dictionary<int, int> partition, Vertex v, Vertex u)
+        {
+            if (partition[v.id] == partition[u.id])
+                return 1;
+            else
+                return 0;
+        }
+
+
+        public static float mod2(Graph g)
         {
 			float modularity = 0;
 

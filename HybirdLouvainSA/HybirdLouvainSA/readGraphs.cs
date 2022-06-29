@@ -40,9 +40,6 @@ namespace HybridLouvainSA
 
 						vertex.neighbours.Add(vertices[neighbour].id);
 						vertex.degree++;
-
-						// Initial degree of sums
-						vertex.sum_degrees++;
 					}
 				}
 

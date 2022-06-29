@@ -98,13 +98,14 @@ namespace HybridLouvainSA
             }
         }
 
-        public void set_partition()
+        public void compute_final_communities()
         {
-            for (int i = 0; i < vertices.Length; i++)
+           for (int i = 0; i < vertices.Length; i++)
             {
                 Vertex vertex = vertices[i];
                 vertex.original_vertices.add_to_partition(vertex.community, partition);
-            }  
+                
+            }
         }
 
         public void initialize_community_list()
