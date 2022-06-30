@@ -6,7 +6,7 @@ namespace HybridLouvainSA
 {
 	public static class Louvain
 	{
-		public static Graph louvain(Graph g)
+		public static Graph louvain(Graph g, int minimum_nodes)
         {
 			// Track if we found a solution, so no new changes to the graph were made during first phase
 			bool change = true;
@@ -17,6 +17,9 @@ namespace HybridLouvainSA
 				Graph graph;
 				(graph, change) = phase_one(g);
 				if (!change)
+					return graph;
+
+				if (g.communities.Count < minimum_nodes)
 					return graph;
 
 				g = phase_two(graph);

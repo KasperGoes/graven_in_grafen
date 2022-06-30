@@ -1,0 +1,42 @@
+﻿using System;
+using System.Collections.Generic;
+
+namespace HybridLouvainSA
+{
+	public static class Experiment
+	{
+		public static (float, Dictionary<int,int>) perform_experiment(experiment exp, Graph graph, int switch_treshold, Graph og_graph)
+        {
+			switch(exp)
+            {
+				case experiment.hybrid:
+                    graph = Louvain.louvain(graph, switch_treshold);
+                    graph = SA.simulatedAnnealing(graph, true);
+                    break;
+
+				case experiment.sa:
+                    graph = SA.simulatedAnnealing(graph, false);
+                    break;
+
+				default:
+                    graph = Louvain.louvain(graph, 0);
+                    break;
+            }
+
+			//calcualte final modularity
+			graph.compute_final_communities();
+
+			// TO DO: copy required of the orignal graph to compute the final modularity
+			float final_mod = Modularity.modularity_given_partition(og_graph, graph.partition);
+			return (final_mod, graph.partition);
+        }
+	}
+
+	public enum experiment
+    {
+		hybrid,
+		sa,
+		louvain
+    }
+}
+

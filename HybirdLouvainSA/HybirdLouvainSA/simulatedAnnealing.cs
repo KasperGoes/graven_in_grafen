@@ -6,12 +6,13 @@ namespace HybridLouvainSA
 	{
 		static Random random = new Random();
 
-		public static float simulatedAnnealing(Graph g)
+		public static Graph simulatedAnnealing(Graph g, bool hybrid)
 		{
-            Console.WriteLine(Modularity.modularity(g));
+            Console.WriteLine(g.vertices.Length);
 
-			// NEEDS TO BE REMOVED ONCE EXPERIMENT CODE IS FINSISHED
-			g.set_initial_community_per_node();
+			if(!hybrid)
+				g.set_initial_community_per_node();
+
 			int iteration =-1;
 
 			float alpha =0.90F;
@@ -19,7 +20,7 @@ namespace HybridLouvainSA
 			double temperature = 1.00;
 			double epsilon = 0.4;
 
-			while(iteration < 10000000)
+			while(iteration < 1000000)
 			{
 				dynamic found_candidate = compute_candadite(g);
 
@@ -69,8 +70,7 @@ namespace HybridLouvainSA
 				iteration++;
 			}
 
-            Console.WriteLine(Modularity.modularity(g));
-			return g.modularity;
+			return g;
 		}
 
 		private static dynamic compute_candadite(Graph g)
