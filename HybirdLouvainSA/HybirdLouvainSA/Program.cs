@@ -13,7 +13,7 @@ namespace HybridLouvainSA
 
             // Choose the desired example graph
             // TO DO: Create loop in experiment class to automatically loop through all generated graphs
-            files file = files.extra;
+            files file = files.thousand;
 
             switch(file)
             {
@@ -45,12 +45,13 @@ namespace HybridLouvainSA
 
             // Declare threshold that defines the stopping criterium for hybrid louvain-sa
             int threshold = 100;
-            float alpha = 0.90F;
+            float alpha = 0.95F;
             float temp = graph.m; // TO DO: GEEN IDEE WAT HIER GOEDE WAARDES VOOR ZIJN
             float epsilon = 0.03F;
 
             // Run the experiment
             (float mod, Dictionary<int,int> partition) = Experiment.perform_experiment(experiment.hybrid, graph, threshold, og_graph, temp, alpha, epsilon);
+
             Console.WriteLine(mod);
 
             // Write partition to file
@@ -64,7 +65,7 @@ namespace HybridLouvainSA
     {
         small,
         extra,
-        thousend
+        thousand
     }
 
     public enum experiment

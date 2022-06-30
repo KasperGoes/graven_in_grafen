@@ -12,6 +12,8 @@ namespace HybridLouvainSA
 			if(!hybrid)
 				g.set_initial_community_per_node();
 
+			g.modularity = Modularity.mod2(g);
+
 			int iteration = 0;
 
 			// While stopping criterium is not met
@@ -33,31 +35,31 @@ namespace HybridLouvainSA
 
 				int new_community = v_in_com.community;
 
-				float delta = Modularity.modularity_difference(g, g.communities[new_community], v_to_move);
+				float mod_difference = Modularity.modularity_difference(g, g.communities[new_community], v_to_move);
 				
-				if(delta > 0)
+				if(mod_difference > 0)
 				{
                     g.switch_to_community(v_to_move, v_in_com);
-					g.modularity += delta;
+					g.modularity += mod_difference;
                 }
-                else
-                {
-                    delta = delta * 2 * g.m;
-                    double acceptProb = Math.Exp(delta / temperature);
-                    double random_probability = random.NextDouble();
+                //else
+                //{
+                //    //delta = delta * 2 * g.m;
+                //    double acceptProb = Math.Exp(mod_difference / temperature);
+                //    double random_probability = random.NextDouble();
 
-                    if (random_probability < acceptProb)
-                    {
-                        g.switch_to_community(v_to_move, v_in_com);
-                        g.modularity += delta;
-                    }
-                }
+                //    if (random_probability < acceptProb)
+                //    {
+                //        g.switch_to_community(v_to_move, v_in_com);
+                //        g.modularity += mod_difference;
+                //    }
+                //}
 
-                temperature = temperature*alpha;
+                temperature = temperature * alpha;
 
 				if (iteration % 1000 == 0)
 				{
-					Console.WriteLine(Modularity.mod2(g));
+					Console.WriteLine(g.modularity);
                 }
 
 				iteration++;

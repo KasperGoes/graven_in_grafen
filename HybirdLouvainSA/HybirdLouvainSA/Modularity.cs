@@ -39,7 +39,6 @@ namespace HybridLouvainSA
                 return 0;
         }
 
-
         public static float mod2(Graph g)
         {
 			float modularity = 0;

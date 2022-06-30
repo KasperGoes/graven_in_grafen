@@ -41,7 +41,7 @@ namespace HybridLouvainSA
             g.set_initial_community_per_node();
 
 			// Compute initial modularity
-			g.modularity = Modularity.mod2(g, false);
+			g.modularity = Modularity.mod2(g);
 
             // Create random order of vertices
             List<int> order = Enumerable.Range(0, g.vertices.Length).ToList();
