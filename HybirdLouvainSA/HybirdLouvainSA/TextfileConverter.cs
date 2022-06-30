@@ -4,13 +4,11 @@ using System.Collections.Generic;
 
 namespace HybridLouvainSA
 {
-	public static class readGraphs
+	public static class TextfileConverter
 	{
-		static string file_edges = "../../../graphs/smallgraph_graph_edges.txt";
-		static string file_partition = "../../../graphs/smallgraph_graph_partition.txt";
-
-		public static (Graph, Dictionary<int,int>) create_graph(StreamReader readergraph, StreamReader readerpartition)
-        {
+		// Creates a graph based on a textfile
+		public static (Graph, Dictionary<int, int>) create_graph(StreamReader readergraph, StreamReader readerpartition)
+		{
 			string[] input = readergraph.ReadLine().Split(" ");
 
 			int n = int.Parse(input[0]);
@@ -30,7 +28,7 @@ namespace HybridLouvainSA
 				string[] adjacencylist = readergraph.ReadLine().Split(" ");
 
 				Vertex vertex = vertices[i];
-				
+
 				for (int j = 0; j < adjacencylist.Length; j++)
 				{
 					if (adjacencylist[j] != "")
@@ -49,6 +47,18 @@ namespace HybridLouvainSA
 			}
 
 			return (graph, benchmark_partition);
+		}
+
+		// Write partition to textfile
+		public static void write_partition(string filepath, Graph graph)
+		{
+			using (StreamWriter sw = File.AppendText(filepath))
+			{
+				for (int i = 0; i < graph.partition.Count; i++)
+				{
+					sw.WriteLine(graph.partition[i]);
+				}
+			}
 		}
 	}
 }

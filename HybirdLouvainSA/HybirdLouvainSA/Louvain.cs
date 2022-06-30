@@ -8,20 +8,25 @@ namespace HybridLouvainSA
 	{
 		public static Graph louvain(Graph g, int minimum_nodes)
         {
-			// Track if we found a solution, so no new changes to the graph were made during first phase
 			bool change = true;
 
-			// We will stop the louvain algorithm when 
+			// If no more communties found/graph reduced, we return the graph with the current communities
 			while(change)
             {
 				Graph graph;
+
+				// Find the communities wihtin the current graph structure
 				(graph, change) = phase_one(g);
+
+				// If no new community configuration was found, return the graph
 				if (!change)
 					return graph;
 
+				// If the number of nodes is smaller that the switch treshold, stop the algorithm
 				if (g.communities.Count < minimum_nodes)
 					return graph;
 
+				// Reduce the graph given the new communities
 				g = phase_two(graph);
 			}
 
@@ -30,12 +35,13 @@ namespace HybridLouvainSA
 
 		private static (Graph, bool) phase_one(Graph g)
         {
-			// Boolean variable to check if the graph is changend during any of the iterations
 			bool change = false;
+            bool found_improvement_all_vertices = true;
 
-			g.set_initial_community_per_node();
+            g.set_initial_community_per_node();
 
-			g.modularity = Modularity.mod2(g);
+			// Compute initial modularity
+			g.modularity = Modularity.mod2(g, false);
 
             // Create random order of vertices
             List<int> order = Enumerable.Range(0, g.vertices.Length).ToList();
@@ -45,10 +51,7 @@ namespace HybridLouvainSA
             // TEMPORARY SAME ORDER VERTICES
             //List<int> random_order = Enumerable.Range(0, g.vertices.Length).ToList();
 
-            bool found_improvement_all_vertices = true;
-
-			// While improvement is possible
-			while (found_improvement_all_vertices)
+            while (found_improvement_all_vertices)
 			{
 				found_improvement_all_vertices = false;
 
@@ -84,7 +87,6 @@ namespace HybridLouvainSA
 					// If improvement found, update the corresponding community
 					if(found_improvement)
 					{
-						g.update_all_neighbouring_communities(v, best_neighbour);
 						g.switch_to_community(v, best_neighbour);
                         g.modularity += max_gain;
 						found_improvement_all_vertices = true;
@@ -98,13 +100,14 @@ namespace HybridLouvainSA
 
         private static Graph phase_two(Graph old_graph)
         {
-            int number_communities = old_graph.communities.Count;
+			int number_communities = old_graph.communities.Count;
 
             Graph graph = new Graph(number_communities);
 
 			int[] communities_array = old_graph.communities.Keys.ToArray<int>();
 			Dictionary<int, int> new_to_old_community_id = new Dictionary<int, int>();
 
+			// Create a vertex for every community
 			for (int i = 0; i < number_communities; i++)
             {
 				int real_com_id = communities_array[i];
@@ -124,12 +127,13 @@ namespace HybridLouvainSA
                 foreach (int v in community.vertices)
                 {
 					Vertex v_in_com = old_graph.vertices[v];
-					og_vertices.add_linked_end(v_in_com.original_vertices);
+					og_vertices.add_linkedlist_end(v_in_com.original_vertices);
                 }
 
 				vertex.original_vertices = og_vertices;
 			}
 
+			// Set the correct values for the sums, adjacecy matrices based on the neighbouring communities
 			for(int i = 0; i < number_communities; i++)
             {
                 int real_com_id = communities_array[i];

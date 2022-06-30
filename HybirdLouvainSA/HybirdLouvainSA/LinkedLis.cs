@@ -9,9 +9,10 @@ namespace HybridLouvainSA
         public Elem tail;
         public Elem current_element;
 
+        // Initialize empty list
         public LinkedList()
         {
-            // Initialize empty list
+            
             head = new Elem(int.MaxValue);
             tail = new Elem(int.MinValue);
             current_element = head;
@@ -19,9 +20,10 @@ namespace HybridLouvainSA
             tail.prev = head;
         }
 
+        // Add new element to list
         public void Add(int i)
         {
-            // Add new element to list
+            
             Elem elem = new Elem(i);
             elem.next = current_element.next;
             elem.prev = current_element;
@@ -30,10 +32,10 @@ namespace HybridLouvainSA
             current_element = elem;
         }
 
+        // Remove current_element element from list
         public void Remove()
         {
-            // Remove current_element element from list
-            if (current_element != head) //&& current_element != tail)
+            if (current_element != head)
             {
                 current_element.prev.next = current_element.next;
                 current_element.next.prev = current_element.prev;
@@ -41,7 +43,8 @@ namespace HybridLouvainSA
             }
         }
 
-        public void add_linked_end(LinkedList list)
+        // Adds the given list at the end of the linked list
+        public void add_linkedlist_end(LinkedList list)
         {
             current_element.next = list.head.next;
             list.head.next.prev = current_element;
@@ -49,6 +52,7 @@ namespace HybridLouvainSA
             this.tail = list.tail;
         }
 
+        // Adds all elements to a partition dictionary
         public Dictionary <int,int> add_to_partition(int community, Dictionary<int,int> partition)
         {
             Elem start = head.next;

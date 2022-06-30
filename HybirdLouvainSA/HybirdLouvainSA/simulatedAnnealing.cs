@@ -6,25 +6,20 @@ namespace HybridLouvainSA
 	{
 		static Random random = new Random();
 
-		public static Graph simulatedAnnealing(Graph g, bool hybrid)
+		public static Graph simulatedAnnealing(Graph g, bool hybrid, float alpha, float temperature, float epsilon)
 		{
-            Console.WriteLine(g.vertices.Length);
-
+			// If the experiment is not hybrid, sest the each node as its own community
 			if(!hybrid)
 				g.set_initial_community_per_node();
 
-			int iteration =-1;
+			int iteration = 0;
 
-			float alpha =0.90F;
-
-			double temperature = 1.00;
-			double epsilon = 0.4;
-
-			while(iteration < 1000000)
+			// While stopping criterium is not met
+            while (iteration < 1000000)
 			{
 				dynamic found_candidate = compute_candadite(g);
 
-				if (found_candidate is bool)
+				if(found_candidate is bool)
                 {
 					Console.WriteLine("No more candidates: " + g.modularity);
 					break;
@@ -42,7 +37,6 @@ namespace HybridLouvainSA
 				
 				if(delta > 0)
 				{
-                    g.update_all_neighbouring_communities(v_to_move, v_in_com);
                     g.switch_to_community(v_to_move, v_in_com);
 					g.modularity += delta;
                 }
@@ -54,7 +48,6 @@ namespace HybridLouvainSA
 
                     if (random_probability < acceptProb)
                     {
-                        g.update_all_neighbouring_communities(v_to_move, v_in_com);
                         g.switch_to_community(v_to_move, v_in_com);
                         g.modularity += delta;
                     }
@@ -65,7 +58,7 @@ namespace HybridLouvainSA
 				if (iteration % 1000 == 0)
 				{
 					Console.WriteLine(Modularity.mod2(g));
-				}
+                }
 
 				iteration++;
 			}
@@ -73,12 +66,15 @@ namespace HybridLouvainSA
 			return g;
 		}
 
+		// Finds candidate community swap
 		private static dynamic compute_candadite(Graph g)
 		{
+			// Get random community
 			int random_com = g.community_list.get_random_element();
 
 			Community community = g.communities[random_com];
 
+			// If possible, get random neighbouring community
 			dynamic random_nc = community.neighbouring_communities.communtity_ids.get_random_element();
 
 			if (random_nc is not int)

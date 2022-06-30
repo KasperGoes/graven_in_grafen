@@ -5,33 +5,7 @@ namespace HybridLouvainSA
 {
 	public static class Modularity
 	{
-		//public static float modularity(Graph g)
-  //      {
-		//	float modularity = 0;
-
-		//	for(int i = 0; i < g.n; i ++)
-  //          {
-		//		Vertex v = g.vertices[i];
-
-		//		for(int j = 0; j < g.n; j++)
-  //              {
-  //                  int factor = 1;
-
-  //                  if (i == j)
-  //                      factor = 2;
-
-  //                  Vertex u = g.vertices[j];
-
-		//			modularity += (factor * g.AdjacencyMatrix[v.id, u.id] - ((float)v.degree * (float)u.degree / (float)(2 * g.m))) * delta(v, u) ;
-  //              }
-  //          }
-
-		//	modularity = modularity / (2 * (float)g.m);
-
-		//	return modularity;
-  //      }
-
-        public static float modularity_given_partition(Graph g, Dictionary<int,int> partition)
+		public static float modularity_given_partition(Graph g, Dictionary<int,int> partition)
         {
             float modularity = 0;
 
@@ -73,7 +47,8 @@ namespace HybridLouvainSA
 			foreach(Community com in g.communities.Values)
             {
                 // TO DO: nu halveer je de som van de community
-                float lc = com.sum_in;
+                float lc = com.sum_in / 2;
+
                 float m = g.m;
 				float kc = com.sum_tot;
 
@@ -82,14 +57,6 @@ namespace HybridLouvainSA
 
 			return modularity;
         }
-
-		//public static int delta(Vertex v, Vertex u)
-		//{
-		//	if (v.community == u.community)
-		//		return 1;
-		//	else
-		//		return 0;
-		//}
 
 		public static float modularity_difference(Graph g, Community community, Vertex vertex)
         {

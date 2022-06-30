@@ -5,11 +5,13 @@ namespace HybridLouvainSA
 {
     public class RandomList<T>
     {
-        public List<T> list;
-        Dictionary<T, int> indexValue;
-        int last_index;
+        public List<T> list; // Actual list
 
-        public int Count;
+        Dictionary<T, int> indexValue; // Dictionary to store values in the list and its index in the actual list for fast removing
+
+        int last_index; // Denotes index of last element
+
+        public int Count; // Denotes the count of the elements in the list
 
         Random random;
 

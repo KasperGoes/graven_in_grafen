@@ -12,7 +12,7 @@ namespace HybridLouvainSA
 
 		public List<int> neighbours;
 
-		public LinkedList original_vertices;
+		public LinkedList original_vertices; // Stores the id's from the vertices in original graphs in reduces Louvain graph
 
 		public Vertex(int id, int community)
 		{
