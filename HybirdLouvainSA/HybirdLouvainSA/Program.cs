@@ -50,7 +50,7 @@ namespace HybridLouvainSA
             float epsilon = 0.03F;
 
             // Run the experiment
-            (float mod, Dictionary<int,int> partition) = Experiment.perform_experiment(experiment.hybrid, graph, threshold, og_graph, temp, alpha, epsilon);
+            (float mod, Dictionary<int,int> partition) = Experiment.perform_experiment(experiment.sa, graph, threshold, og_graph, temp, alpha, epsilon);
 
             Console.WriteLine(mod);
 
