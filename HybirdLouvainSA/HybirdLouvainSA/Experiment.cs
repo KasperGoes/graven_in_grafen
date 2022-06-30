@@ -13,17 +13,17 @@ namespace HybridLouvainSA
         /// <param name="switch_treshold"></param> Denotes the number of nodes threshold to transition from louvain to sa
         /// <param name="og_graph"></param>
         /// <returns></returns> Returns the modularity and the corresponding partition
-		public static (float, Dictionary<int,int>) perform_experiment(experiment exp, Graph graph, int switch_treshold, Graph og_graph)
+		public static (float, Dictionary<int,int>) perform_experiment(experiment exp, Graph graph, int switch_treshold, Graph og_graph, float temp, float alpha, float epsilon)
         {
 			switch(exp)
             {
 				case experiment.hybrid:
                     graph = Louvain.louvain(graph, switch_treshold);
-                    graph = SA.simulatedAnnealing(graph, true);
+                    graph = SA.simulatedAnnealing(graph, true, alpha, temp, epsilon);
                     break;
 
 				case experiment.sa:
-                    graph = SA.simulatedAnnealing(graph, false);
+                    graph = SA.simulatedAnnealing(graph, false, alpha, temp, epsilon);
                     break;
 
 				default:
@@ -40,6 +40,6 @@ namespace HybridLouvainSA
 
 			return (final_mod, graph.partition);
         }
-	}
+    }
 }
 

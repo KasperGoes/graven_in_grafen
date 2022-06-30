@@ -37,21 +37,24 @@ namespace HybridLouvainSA
             StreamReader readeredges = new StreamReader(filename1);
             StreamReader readerpartition = new StreamReader(filename2);
 
-            (Graph graph, Dictionary<int,int> real_partition) = readGraphs.create_graph(readeredges, readerpartition);
+            (Graph graph, Dictionary<int,int> real_partition) = TextfileConverter.create_graph(readeredges, readerpartition);
 
             readeredges = new StreamReader(filename1);
             readerpartition = new StreamReader(filename2);
-            (Graph og_graph, Dictionary<int, int> og_real_partition) = readGraphs.create_graph(readeredges, readerpartition);
+            (Graph og_graph, Dictionary<int, int> og_real_partition) = TextfileConverter.create_graph(readeredges, readerpartition);
 
             // Declare threshold that defines the stopping criterium for hybrid louvain-sa
             int threshold = 100;
+            float alpha = 0.90F;
+            float temp = graph.m; // TO DO: GEEN IDEE WAT HIER GOEDE WAARDES VOOR ZIJN
+            float epsilon = 0.03F;
 
             // Run the experiment
-            (float mod, Dictionary<int,int> partition) = Experiment.perform_experiment(experiment.hybrid, graph, threshold, og_graph);
+            (float mod, Dictionary<int,int> partition) = Experiment.perform_experiment(experiment.hybrid, graph, threshold, og_graph, temp, alpha, epsilon);
             Console.WriteLine(mod);
 
             // Write partition to file
-            WritePartition.write_partition("../../../partition/extra voorbeeld edges.txt", graph);
+            TextfileConverter.write_partition("../../../partition/extra voorbeeld edges.txt", graph);
 
             Console.WriteLine("finished");
         }
