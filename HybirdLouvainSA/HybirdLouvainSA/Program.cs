@@ -14,7 +14,7 @@ namespace HybridLouvainSA
             // Choose the desired example graph
             // TO DO: Create loop in experiment class to automatically loop through all generated graphs
             files file = files.tenthousand;
-            experiment experiment = experiment.hybrid;
+            experiment experiment = experiment.sa;
 
             switch(file)
             {
