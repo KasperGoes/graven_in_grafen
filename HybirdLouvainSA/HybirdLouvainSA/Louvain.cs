@@ -14,16 +14,17 @@ namespace HybridLouvainSA
 			while(change)
             {
 				Graph graph;
+                g.set_initial_community_per_node();
 
-				// Find the communities wihtin the current graph structure
-				(graph, change) = phase_one(g);
+                // If the number of nodes is smaller that the switch treshold, stop the algorithm
+                if (g.communities.Count < minimum_nodes)
+                    return g;
+
+                // Find the communities wihtin the current graph structure
+                (graph, change) = phase_one(g);
 
 				// If no new community configuration was found, return the graph
 				if (!change)
-					return graph;
-
-				// If the number of nodes is smaller that the switch treshold, stop the algorithm
-				if (g.communities.Count < minimum_nodes)
 					return graph;
 
 				// Reduce the graph given the new communities
@@ -38,18 +39,16 @@ namespace HybridLouvainSA
 			bool change = false;
             bool found_improvement_all_vertices = true;
 
-            g.set_initial_community_per_node();
-
-			// Compute initial modularity
+            // Compute initial modularity
 			g.modularity = Modularity.mod2(g);
-
+			
             // Create random order of vertices
-            List<int> order = Enumerable.Range(0, g.vertices.Length).ToList();
-            Random random = new Random();
-            List<int> random_order = order.OrderBy(x => random.Next()).ToList();
+            //List<int> order = Enumerable.Range(0, g.vertices.Length).ToList();
+            //Random random = new Random();
+            //List<int> random_order = order.OrderBy(x => random.Next()).ToList();
 
             // TEMPORARY SAME ORDER VERTICES
-            //List<int> random_order = Enumerable.Range(0, g.vertices.Length).ToList();
+            List<int> random_order = Enumerable.Range(0, g.vertices.Length).ToList();
 
             while (found_improvement_all_vertices)
 			{
@@ -66,12 +65,17 @@ namespace HybridLouvainSA
 					Vertex v = g.vertices[random_order[i]];
 					Vertex best_neighbour = null;
 
-					// Compute best change in community if possible
-					foreach (int neighbour in v.neighbours)
+					// TO DO: REMOVE
+                    int v_int = v.id;
+
+                    // Compute best change in community if possible
+                    foreach (int neighbour in v.neighbours)
 					{
 						Vertex u = g.vertices[neighbour];
+                        // TO DO: REMOVE
+                        int u_int = u.id;
 
-						if (u.community == v.community)
+                        if (u.community == v.community)
 							continue;
 
 						float modularity_diff = Modularity.modularity_difference(g, g.communities[u.community], v);
@@ -117,7 +121,9 @@ namespace HybridLouvainSA
                 Vertex vertex = new Vertex(i, i);
                 graph.vertices[i] = vertex;
 
-                int loop_degree = 2 * community.sum_in;
+				//TO DO: Maak onderscheid tussen de edges bij de sum in voor self loops en between vertex edges
+				int between_edges = community.sum_in - community.weight_selfloops;
+				int loop_degree = 2 * between_edges + community.weight_selfloops;
 
                 graph.AdjacencyMatrix[i, i] = loop_degree;
                 graph.m += loop_degree;

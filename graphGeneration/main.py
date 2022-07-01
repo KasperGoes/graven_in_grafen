@@ -8,21 +8,21 @@ import networkx as nx
 import matplotlib.pyplot as plt
 
 # Initialize parameters
-number_graphs = 3
-sizes = [1000, 10000, 100000, 1000000]
+number_graphs = 50
+sizes = [1000, 10000, 50000]
 mus = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8]
 avg_degree = 20
 max_degree = 50
 node_degree_exponent = -2
-min_com_size = 10
-max_com_size = 50
+min_com_size = 20
+max_com_size = 100
 com_size_exponent = -1
 
 # Generate graphs
-# all_graphs = gg.generate_all_graphs(number_graphs, sizes, mus, avg_degree, max_degree, node_degree_exponent,
-#                                     min_com_size, max_com_size, com_size_exponent)
-# graph = all_graphs[0][0][0][0]
-# print(nk.overview(graph))
+all_graphs = gg.generate_all_graphs(number_graphs, sizes, mus, avg_degree, max_degree, node_degree_exponent,
+                                    min_com_size, max_com_size, com_size_exponent)
+
+
 
 def write_graphs(sizes, mus, number_graphs, all_graphs):
     """
@@ -50,14 +50,7 @@ def write_one_graph(graph, partition, filename):
     nk.writeGraph(graph, filename + "_graph_edges.txt", nk.Format.METIS)
     nk.community.writeCommunities(partition, filename + "_graph_partition.txt")
 
-# write_graphs(sizes, mus, number_graphs, all_graphs)
-
-# smallgraph, partition = gg.one_graph()
-# write_one_graph(smallgraph, partition, "smallgraph")
-
-smallgraph = nk.readGraph("smallgraph_graph_edges.txt", nk.Format.METIS)
-nx.draw_networkx(nk.nxadapter.nk2nx(smallgraph))
-plt.show()
+write_graphs(sizes, mus, number_graphs, all_graphs)
 
 def louvain(graph):
     graphx = nk.nxadapter.nk2nx(graph)

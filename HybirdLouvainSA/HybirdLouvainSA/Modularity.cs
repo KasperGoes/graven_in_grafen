@@ -41,20 +41,19 @@ namespace HybridLouvainSA
 
         public static float mod2(Graph g)
         {
-			float modularity = 0;
+			double modularity = 0;
 
 			foreach(Community com in g.communities.Values)
             {
-                // TO DO: nu halveer je de som van de community
-                float lc = com.sum_in / 2;
-
+                int between_links = com.sum_in - com.weight_selfloops;
+                int lc = com.weight_selfloops + 2 * between_links;
                 float m = g.m;
 				float kc = com.sum_tot;
 
-				modularity += (lc / m) - (float)Math.Pow(kc / (2 * m),2);
+				modularity += (lc / m) - Math.Pow(kc / (2 * m),2);
             }
 
-			return modularity;
+			return (float)modularity;
         }
 
 		public static float modularity_difference(Graph g, Community community, Vertex vertex)
@@ -69,8 +68,8 @@ namespace HybridLouvainSA
         private static float modularity_difference_add(Graph g, Community community, Vertex vertex)
 		{
 			int degree = vertex.degree;
-			int degree_in_com = community.sum_in_community_per_vertex(g, vertex);
-			float sum_in = community.sum_in;
+            int degree_in_com = community.sum_in_community_per_vertex(g, vertex) + 2 * g.AdjacencyMatrix[vertex.id, vertex.id];
+            float sum_in = community.sum_in;
 			float sum_tot = community.sum_tot;
 
 			float modularity_difference = mod_diff(g.m, degree, degree_in_com, sum_in, sum_tot);
@@ -81,7 +80,7 @@ namespace HybridLouvainSA
 		private static float modularity_difference_remove(Graph g, Community community, Vertex vertex)
         {
             int degree = vertex.degree;
-            int degree_in_com = community.sum_in_community_per_vertex(g, vertex);
+            int degree_in_com = community.sum_in_community_per_vertex(g, vertex) + 2 * g.AdjacencyMatrix[vertex.id, vertex.id];
             float sum_in = (float)community.sum_in - degree_in_com;
             float sum_tot = community.sum_tot - degree;
 

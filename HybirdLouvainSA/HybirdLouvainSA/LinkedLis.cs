@@ -12,7 +12,6 @@ namespace HybridLouvainSA
         // Initialize empty list
         public LinkedList()
         {
-            
             head = new Elem(int.MaxValue);
             tail = new Elem(int.MinValue);
             current_element = head;

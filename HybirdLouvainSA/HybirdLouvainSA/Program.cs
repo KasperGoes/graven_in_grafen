@@ -13,23 +13,39 @@ namespace HybridLouvainSA
 
             // Choose the desired example graph
             // TO DO: Create loop in experiment class to automatically loop through all generated graphs
-            files file = files.thousand;
+            files file = files.tenthousand;
+            experiment experiment = experiment.hybrid;
 
             switch(file)
             {
                 case files.small:
-                    filename1 = "../../../graphs/smallgraph_graph_edges.txt";
-                    filename2 = "../../../graphs/smallgraph_graph_partition.txt";
+                    filename1 = "../../../voorbeelden/smallgraph_graph_edges.txt";
+                    filename2 = "../../../voorbeelden/smallgraph_graph_partition.txt";
                     break;
 
                 case files.extra:
-                    filename1 = "../../../graphs/extra voorbeeld edges.txt";
-                    filename2 = "../../../graphs/extra voorbeeld partition.txt";
+                    filename1 = "../../../voorbeelden/extra voorbeeld edges.txt";
+                    filename2 = "../../../voorbeelden/extra voorbeeld partition.txt";
+                    break;
+
+                case files.louvain:
+                    filename1 = "../../../voorbeelden/louvain voorbeeld edges.txt";
+                    filename2 = "../../../voorbeelden/louvain voorbeeld partition.txt";
+                    break;
+
+                case files.thousand:
+                    filename1 = "../../../graphs/graphs/1000/0.7/0_graph_edges.txt";
+                    filename2 = "../../../graphs/graphs/1000/0.7/0_graph_partition.txt";
+                    break;
+
+                case files.loops:
+                    filename1 = "../../../voorbeelden/loops edges.txt";
+                    filename2 = "../../../voorbeelden/loops partition.txt";
                     break;
 
                 default:
-                    filename1 = "../../../graphs/graphs/1000/0.2/0_graph_edges.txt";
-                    filename2 = "../../../graphs/graphs/1000/0.2/0_graph_partition.txt";
+                    filename1 = "../../../graphs/graphs/10000/0.3/0_graph_edges.txt";
+                    filename2 = "../../../graphs/graphs/10000/0.3/0_graph_partition.txt";
                     break;
             }
 
@@ -45,17 +61,17 @@ namespace HybridLouvainSA
 
             // Declare threshold that defines the stopping criterium for hybrid louvain-sa
             int threshold = 100;
-            float alpha = 0.95F;
-            float temp = graph.m; // TO DO: GEEN IDEE WAT HIER GOEDE WAARDES VOOR ZIJN
+            float alpha = 0.999999F;
+            float temp = 5; // TO DO: GEEN IDEE WAT HIER GOEDE WAARDES VOOR ZIJN
             float epsilon = 0.03F;
 
             // Run the experiment
-            (float mod, Dictionary<int,int> partition) = Experiment.perform_experiment(experiment.sa, graph, threshold, og_graph, temp, alpha, epsilon);
+            (float mod, Graph final_graph) = Experiment.perform_experiment(experiment, graph, threshold, og_graph, temp, alpha, epsilon);
 
             Console.WriteLine(mod);
 
             // Write partition to file
-            TextfileConverter.write_partition("../../../partition/extra voorbeeld edges.txt", graph);
+            TextfileConverter.write_partition("../../../partition/" + experiment.ToString() +" " + graph.vertices.Length.ToString() + ".txt", final_graph.partition);
 
             Console.WriteLine("finished");
         }
@@ -65,7 +81,10 @@ namespace HybridLouvainSA
     {
         small,
         extra,
-        thousand
+        thousand,
+        tenthousand,
+        loops,
+        louvain
     }
 
     public enum experiment

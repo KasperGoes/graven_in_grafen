@@ -13,7 +13,7 @@ namespace HybridLouvainSA
         /// <param name="switch_treshold"></param> Denotes the number of nodes threshold to transition from louvain to sa
         /// <param name="og_graph"></param>
         /// <returns></returns> Returns the modularity and the corresponding partition
-		public static (float, Dictionary<int,int>) perform_experiment(experiment exp, Graph graph, int switch_treshold, Graph og_graph, float temp, float alpha, float epsilon)
+		public static (float, Graph) perform_experiment(experiment exp, Graph graph, int switch_treshold, Graph og_graph, float temp, float alpha, float epsilon)
         {
 			switch(exp)
             {
@@ -38,7 +38,7 @@ namespace HybridLouvainSA
             // TO DO: Final modularity should not differ from the modularity saved in the graph, so mod diff is still not correct
 			float final_mod = Modularity.modularity_given_partition(og_graph, graph.partition);
 
-			return (final_mod, graph.partition);
+			return (final_mod, graph);
         }
     }
 }

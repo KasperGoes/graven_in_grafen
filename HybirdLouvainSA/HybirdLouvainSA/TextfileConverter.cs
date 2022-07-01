@@ -50,13 +50,16 @@ namespace HybridLouvainSA
 		}
 
 		// Write partition to textfile
-		public static void write_partition(string filepath, Graph graph)
+		public static void write_partition(string filepath, Dictionary<int,int> partition)
 		{
-			using (StreamWriter sw = File.AppendText(filepath))
-			{
-				for (int i = 0; i < graph.partition.Count; i++)
+			using (StreamWriter stream = new StreamWriter(filepath, false))
+            {
+				for (int i = 0; i < partition.Count; i++)
 				{
-					sw.WriteLine(graph.partition[i]);
+					if(i == partition.Count - 1)
+                        stream.Write(partition[i]);
+                    else
+						stream.WriteLine(partition[i]);
 				}
 			}
 		}

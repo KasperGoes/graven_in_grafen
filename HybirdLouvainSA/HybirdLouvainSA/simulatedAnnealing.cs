@@ -2,53 +2,53 @@
 
 namespace HybridLouvainSA
 {
-	public static class SA
-	{
-		static Random random = new Random();
+    public static class SA
+    {
+        static Random random = new Random();
 
-		public static Graph simulatedAnnealing(Graph g, bool hybrid, float alpha, float temperature, float epsilon)
-		{
-			// If the experiment is not hybrid, sest the each node as its own community
-			if(!hybrid)
-				g.set_initial_community_per_node();
+        public static Graph simulatedAnnealing(Graph g, bool hybrid, float alpha, float temperature, float epsilon)
+        {
+            // If the experiment is not hybrid, sest the each node as its own community
+            if (!hybrid)
+                g.set_initial_community_per_node();
 
-			g.modularity = Modularity.mod2(g);
+            g.modularity = Modularity.mod2(g);
 
-			int iteration = 0;
+            int iteration = 0;
 
-			// While stopping criterium is not met
-            while (iteration < 1000000)
-			{
-				dynamic found_candidate = compute_candadite(g);
+            // While stopping criterium is not met
+            while (temperature > epsilon)
+            {
+                dynamic found_candidate = compute_candadite(g);
 
-				if(found_candidate is bool)
+                if (found_candidate is bool)
                 {
-					Console.WriteLine("No more candidates: " + g.modularity);
-					break;
+                    Console.WriteLine("No more candidates: " + g.modularity);
+                    break;
                 }
-					
-				int n = found_candidate.Item1;
+
+                int n = found_candidate.Item1;
                 int vertex = found_candidate.Item2;
 
                 Vertex v_in_com = g.vertices[n];
-				Vertex v_to_move = g.vertices[vertex];
+                Vertex v_to_move = g.vertices[vertex];
 
-				int new_community = v_in_com.community;
+                int new_community = v_in_com.community;
 
-				float mod_difference = Modularity.modularity_difference(g, g.communities[new_community], v_to_move);
-				
-				if(mod_difference > 0)
-				{
+                float mod_difference = Modularity.modularity_difference(g, g.communities[new_community], v_to_move);
+
+                if (mod_difference > 0)
+                {
                     g.switch_to_community(v_to_move, v_in_com);
-					g.modularity += mod_difference;
+                    g.modularity += mod_difference;
                 }
                 //else
                 //{
-                //    //delta = delta * 2 * g.m;
-                //    double acceptProb = Math.Exp(mod_difference / temperature);
+                //    double mod_differencechance = mod_difference * g.m;
+                //    double acceptProb = Math.Exp(mod_differencechance / temperature);
                 //    double random_probability = random.NextDouble();
 
-                //    if (random_probability < acceptProb)
+                //    if (random_probability < acceptProb && mod_difference != 0)
                 //    {
                 //        g.switch_to_community(v_to_move, v_in_com);
                 //        g.modularity += mod_difference;
@@ -57,35 +57,37 @@ namespace HybridLouvainSA
 
                 temperature = temperature * alpha;
 
-				if (iteration % 1000 == 0)
-				{
-					Console.WriteLine(g.modularity);
+                if (iteration % 1000 == 0)
+                {
+                    Console.WriteLine(g.modularity);
                 }
 
-				iteration++;
-			}
+                iteration++;
+            }
 
-			return g;
-		}
+            return g;
+        }
 
-		// Finds candidate community swap
-		private static dynamic compute_candadite(Graph g)
-		{
-			// Get random community
-			int random_com = g.community_list.get_random_element();
+        // Finds candidate community swap
+        private static dynamic compute_candadite(Graph g)
+        {
+            // Get random community
+            dynamic random_com = g.community_list.get_random_element();
+            if (random_com is not int)
+                return false;
 
-			Community community = g.communities[random_com];
+            Community community = g.communities[random_com];
 
-			// If possible, get random neighbouring community
-			dynamic random_nc = community.neighbouring_communities.communtity_ids.get_random_element();
+            // If possible, get random neighbouring community
+            dynamic random_nc = community.neighbouring_communities.communtity_ids.get_random_element();
 
-			if (random_nc is not int)
-				return false;
+            if (random_nc is not int)
+                return false;
 
-			dynamic edge_tuple = community.neighbouring_communities.connecting_edges[random_nc].get_random_element();
+            dynamic edge_tuple = community.neighbouring_communities.connecting_edges[random_nc].get_random_element();
 
-			return edge_tuple;
-		}
-	}
+            return edge_tuple;
+        }
+    }
 }
 
