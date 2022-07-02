@@ -46,11 +46,13 @@ namespace HybridLouvainSA
 		}
 
 		// Write partition to textfile
-		public static void write_result(string filepath, Dictionary<int,int> partition, string elapsed_time)
+		public static void write_result(string filepath, Dictionary<int,int> partition, string elapsed_time, float mod)
 		{
 			using (StreamWriter stream = new StreamWriter(filepath, false))
             {
+				stream.WriteLine(mod);
                 stream.WriteLine(elapsed_time);
+
                 for (int i = 0; i < partition.Count; i++)
 				{
 					if(i == partition.Count - 1)

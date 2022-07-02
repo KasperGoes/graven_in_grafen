@@ -8,7 +8,7 @@ namespace HybridLouvainSA
 	{
         public static void run_all_experiments(int switch_treshold, float temp, float alpha, float epsilon)
         {
-            int graphs = 20;
+            int graphs = 10;
             string filename = "../../../graphs/";
 
             foreach(string graphsize_string in Directory.GetDirectories(filename))
@@ -24,7 +24,7 @@ namespace HybridLouvainSA
                         Graph og_graph = TextfileConverter.create_graph(graph_path);
 
                         // Run the experiment
-                        foreach(experiment exp in Enum.GetValues(typeof(experiment)))
+                        foreach (experiment exp in Enum.GetValues(typeof(experiment)))
                         {
                             Graph graph = TextfileConverter.create_graph(graph_path);
 
@@ -42,7 +42,7 @@ namespace HybridLouvainSA
                             string elapsed_time = String.Format("{0:00}:{1:00}:{2:00}.{3:00}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
 
                             // Write partition to file
-                            TextfileConverter.write_result("../../../partitions/" + size_mu + "/" + i.ToString() + "_" + exp.ToString() + ".txt", final_graph.partition, elapsed_time);
+                            TextfileConverter.write_result("../../../partitions/" + size_mu + "/" + i.ToString() + "_" + exp.ToString() + ".txt", final_graph.partition, elapsed_time, graph.modularity);
                         }
 
                         Console.WriteLine("finished");
