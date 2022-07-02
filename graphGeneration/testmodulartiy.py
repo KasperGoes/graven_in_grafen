@@ -93,11 +93,6 @@ def extra_example():
 
 extra_example()
 
-def read_graph(filename):
-    graph = nk.readGraph("smallgraph_graph_edges.txt", nk.Format.METIS)
-    nk.nxadapter.nk2nx(graph)
-    return graph
-
 def loops_example():
     graph = nx.Graph()
     graph.add_node(0)

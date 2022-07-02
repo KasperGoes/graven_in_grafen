@@ -42,25 +42,20 @@ namespace HybridLouvainSA
                     g.switch_to_community(v_to_move, v_in_com);
                     g.modularity += mod_difference;
                 }
-                //else
-                //{
-                //    double mod_differencechance = mod_difference * g.m;
-                //    double acceptProb = Math.Exp(mod_differencechance / temperature);
-                //    double random_probability = random.NextDouble();
+                else
+                {
+                    double mod_differencechance = mod_difference * g.m;
+                    double acceptProb = Math.Exp(mod_differencechance / temperature);
+                    double random_probability = random.NextDouble();
 
-                //    if (random_probability < acceptProb && mod_difference != 0)
-                //    {
-                //        g.switch_to_community(v_to_move, v_in_com);
-                //        g.modularity += mod_difference;
-                //    }
-                //}
+                    if (random_probability < acceptProb && mod_difference != 0)
+                    {
+                        g.switch_to_community(v_to_move, v_in_com);
+                        g.modularity += mod_difference;
+                    }
+                }
 
                 temperature = temperature * alpha;
-
-                //if (iteration % 1000 == 0)
-                //{
-                //    Console.WriteLine(g.modularity);
-                //}
 
                 iteration++;
             }

@@ -8,7 +8,7 @@ namespace HybridLouvainSA
 	{
         public static void run_all_experiments(int switch_treshold, float temp, float alpha, float epsilon)
         {
-            int graphs = 10;
+            int graphs = 20;
             string filename = "../../../graphs/";
 
             foreach(string graphsize_string in Directory.GetDirectories(filename))
@@ -63,12 +63,10 @@ namespace HybridLouvainSA
         /// <returns></returns> Returns the modularity and the corresponding partition
 		public static Graph perform_experiment(experiment exp, Graph graph, int switch_treshold, Graph og_graph, float temp, float alpha, float epsilon)
         {
-
-			switch(exp)
+            switch(exp)
             {
 				case experiment.hybrid:
-                    graph = Louvain.louvain(graph, switch_treshold);
-                    graph = SA.simulatedAnnealing(graph, true, alpha, temp, epsilon);
+                    graph = Hybrid.hybrid_algorithm(graph, switch_treshold, true, alpha, temp, epsilon);
                     break;
 
 				case experiment.sa:
