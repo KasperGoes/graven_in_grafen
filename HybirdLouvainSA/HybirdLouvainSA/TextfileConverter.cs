@@ -7,9 +7,11 @@ namespace HybridLouvainSA
 	public static class TextfileConverter
 	{
 		// Creates a graph based on a textfile
-		public static (Graph, Dictionary<int, int>) create_graph(StreamReader readergraph, StreamReader readerpartition)
+		public static Graph create_graph(string graphpath)
 		{
-			string[] input = readergraph.ReadLine().Split(" ");
+			StreamReader readergraph = new StreamReader(graphpath);
+            
+            string[] input = readergraph.ReadLine().Split(" ");
 
 			int n = int.Parse(input[0]);
 			int m = int.Parse(input[1]);
@@ -17,8 +19,6 @@ namespace HybridLouvainSA
 			Graph graph = new Graph(n);
 			graph.m = m;
 			Vertex[] vertices = graph.vertices;
-
-			Dictionary<int, int> benchmark_partition = new Dictionary<int, int>();
 
 			for (int i = 0; i < n; i++)
 				vertices[i] = new Vertex(i, i);
@@ -40,21 +40,18 @@ namespace HybridLouvainSA
 						vertex.degree++;
 					}
 				}
-
-				int community = int.Parse(readerpartition.ReadLine());
-
-				benchmark_partition[i] = community;
 			}
 
-			return (graph, benchmark_partition);
+			return graph;
 		}
 
 		// Write partition to textfile
-		public static void write_partition(string filepath, Dictionary<int,int> partition)
+		public static void write_result(string filepath, Dictionary<int,int> partition, string elapsed_time)
 		{
 			using (StreamWriter stream = new StreamWriter(filepath, false))
             {
-				for (int i = 0; i < partition.Count; i++)
+                stream.WriteLine(elapsed_time);
+                for (int i = 0; i < partition.Count; i++)
 				{
 					if(i == partition.Count - 1)
                         stream.Write(partition[i]);

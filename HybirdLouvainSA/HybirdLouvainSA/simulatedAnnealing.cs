@@ -57,10 +57,10 @@ namespace HybridLouvainSA
 
                 temperature = temperature * alpha;
 
-                if (iteration % 1000 == 0)
-                {
-                    Console.WriteLine(g.modularity);
-                }
+                //if (iteration % 1000 == 0)
+                //{
+                //    Console.WriteLine(g.modularity);
+                //}
 
                 iteration++;
             }
