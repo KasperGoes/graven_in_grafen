@@ -89,46 +89,9 @@ namespace HybridLouvainSA
 			return graph;
         }
 
-        public static void run_one_experiment(files file, experiment experiment, int switch_treshold, float temp, float alpha, float epsilon)
+        public static void run_one_experiment(string filename1, string filename2, experiment experiment, int switch_treshold, float temp, float alpha, float epsilon)
         {
             // Choose the desired example graph
-            string filename1;
-            string filename2;
-
-            switch (file)
-            {
-                case files.small:
-                    filename1 = "../../../voorbeelden/smallgraph_graph_edges.txt";
-                    filename2 = "../../../voorbeelden/smallgraph_graph_partition.txt";
-                    break;
-
-                case files.extra:
-                    filename1 = "../../../voorbeelden/extra voorbeeld edges.txt";
-                    filename2 = "../../../voorbeelden/extra voorbeeld partition.txt";
-                    break;
-
-                case files.louvain:
-                    filename1 = "../../../voorbeelden/louvain voorbeeld edges.txt";
-                    filename2 = "../../../voorbeelden/louvain voorbeeld partition.txt";
-                    break;
-
-                case files.thousand:
-                    filename1 = "../../../graphs/graphs/1000/0.7/0_graph_edges.txt";
-                    filename2 = "../../../graphs/graphs/1000/0.7/0_graph_partition.txt";
-                    break;
-
-                case files.loops:
-                    filename1 = "../../../voorbeelden/loops edges.txt";
-                    filename2 = "../../../voorbeelden/loops partition.txt";
-                    break;
-
-                default:
-                    filename1 = "../../../graphs/20000/0.8/0_graph_edges.txt";
-                    filename2 = "../../../graphs/20000/0.8/0_graph_partition.txt";
-                    break;
-            }
-
-            
             Graph graph = TextfileConverter.create_graph(filename1);
 
             
@@ -148,7 +111,7 @@ namespace HybridLouvainSA
             string elapsed_time = String.Format("{0:00}:{1:00}:{2:00}.{3:00}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
 
             // Write partition to file
-            TextfileConverter.write_result("../../../partition/" + experiment.ToString() + " " + graph.vertices.Length.ToString() + ".txt", final_graph.partition, elapsed_time, graph.modularity);
+            TextfileConverter.write_result("voorbeeld part" + experiment.ToString() + " " + graph.vertices.Length.ToString() + ".txt", final_graph.partition, elapsed_time, graph.modularity);
 
             Console.WriteLine("finished");
         }
