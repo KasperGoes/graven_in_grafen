@@ -94,69 +94,110 @@ def mean_confidence_interval(data, confidence=0.95):
     h = se * scipy.stats.t.ppf((1 + confidence) / 2., n-1)
     return m, m-h, m+h
 
-def printing_results(name, Resultstotal):
+def printing_results_latex_tables(Resultstotal):
 
-    for dictionary in Resultstotal:
-        for key, value in dictionary.items():
+    for key, value in Resultstotal.items():
 
-            print(f"{dictionary}:")
-            print()
+        print(f"{key}:")
+        print("mu & mean NMI & confidence interval & mean Modularity & average time")
+        print()
+        for key in value:
 
-            print(key, value)
-            print("------------------------------------")
+            dictionary = value[key]
+            meanNMI = dictionary["mean_NMI"]
+            Confidence = dictionary["Confidence"]
+            meanModularity = dictionary["mean Modularity"]
+            average_time = dictionary["average_time"]
+
+            print(f"{key} & {meanNMI} & {Confidence} & {meanModularity} & {average_time} \\\\")
+            print("\hline")
+
+        print("------------------------------------------")
+        print()
+
+def printing_results_latex_graphs(Resultstotal):
+
+    for key, value in Resultstotal.items():
+
+        print(f"{key}:")
+        print()
+        for key in value:
+
+            dictionary = value[key]
+            meanNMI = dictionary["mean_NMI"]
+            Confidence = dictionary["Confidence"]
+            lower = round(Confidence[1]-meanNMI, 2)
+            higher = round(meanNMI - Confidence[0],2)
+
+            print(f"({key},{meanNMI}) +=(0,{lower}) -= (0,{higher})")
+            # print(f"({key},{meanNMI})")
+        print("------------------------------------------")
+        print()
 
 def writing_txt(data):
 
-    for dictionary in data:
+    for key, value in data.items():
+        for dictionary in data:
 
-        with open("myfile.txt", 'w') as f: 
-            for key, value in dictionary.items(): 
-                f.write('%s:%s\n' % (key, value))
-
-    # for result in data:
-        
-    #     with open(f'Results/{result}.csv', 'w') as f:
-    #         w = csv.DictWriter(f, data.keys())
-    #         w.writeheader()
-    #         w.writerow(data)
-    
+            with open("myfile.txt", 'w') as f: 
+                for key, value in dictionary.items(): 
+                    f.write('%s:%s\n' % (key, value))
 
 def main():
 
+    #This file is used to generate the results of the experiments. 
+    #We compare the found partitions to the ground truth and print the results
 
-    #graph sizes used in the experiment
-    graphsizes = ["10000","20000","50000"]
-
+    path1000 = "HybirdLouvainSA/HybirdLouvainSA/partitions/1000"
+    path5000 = "HybirdLouvainSA/HybirdLouvainSA/partitions/5000"
     path10000 = "HybirdLouvainSA/HybirdLouvainSA/partitions/10000"
-    path20000 = "HybirdLouvainSA/HybirdLouvainSA/partitions/20000"
     path50000 = "HybirdLouvainSA/HybirdLouvainSA/partitions/50000"
 
+    Hybrid1000, Louvain1000, SA1000 = load_files(path1000)
+    Hybrid5000, Louvain5000, SA5000 = load_files(path5000)
     Hybrid10000, Louvain10000, SA10000 = load_files(path10000)
-    Hybrid20000, Louvain20000, SA20000 = load_files(path20000)
     Hybrid50000, Louvain50000, SA50000 = load_files(path50000)
 
+    path1000answer = "graphGeneration/graphs/1000"
+    path5000answer = "graphGeneration/graphs/5000"
     path10000answer = "graphGeneration/graphs/10000"
-    path20000answer = "graphGeneration/graphs/20000"
     path50000answer = "graphGeneration/graphs/50000"
 
+    Answers1000 = get_location(path1000answer)
+    Answers5000 = get_location(path5000answer)
     Answers10000 = get_location(path10000answer)
-    Answers20000 = get_location(path20000answer)
     Answers50000 = get_location(path50000answer)
 
-    # extra test
-    Results_Hybrid10000 = calculateNMI(SA10000, Answers10000)
 
+    Results_SA1000 = calculateNMI(SA1000, Answers1000)
+    Results_Hybrid1000 = calculateNMI(Hybrid1000, Answers1000)
+    Results_Louvain1000 = calculateNMI(Louvain1000, Answers1000)
+
+
+    Results_SA5000 = calculateNMI(SA5000, Answers5000)
+    Results_Hybrid5000 = calculateNMI(Hybrid5000, Answers5000)
+    Results_Louvain5000 = calculateNMI(Louvain5000, Answers5000)
+
+    # Results_SA10000 = calculateNMI(SA10000, Answers10000)
     Results_Hybrid10000 = calculateNMI(Hybrid10000, Answers10000)
     Results_Louvain10000 = calculateNMI(Louvain10000, Answers10000)
-    Results_Hybrid20000 = calculateNMI(Hybrid20000, Answers20000)
-    Results_Louvain20000 = calculateNMI(Louvain20000, Answers20000)
+
+    # Results_SA50000 = calculateNMI(SA50000, Answers50000)
     Results_Hybrid50000 = calculateNMI(Hybrid50000, Answers50000)
     Results_Louvain50000 = calculateNMI(Louvain50000, Answers50000)
 
-    Resultstotal = [Results_Hybrid10000, Results_Louvain10000, Results_Hybrid20000, Results_Louvain20000, Results_Hybrid50000, Results_Louvain50000]
+    #"Results_SA10000":Results_SA10000
+    #"Results_SA50000":Results_SA50000
+    Resultstotal = {"Results_Hybrid1000": Results_Hybrid1000, "Results_Louvain1000": Results_Louvain1000, "Results_SA1000":Results_SA1000,
+                    "Results_Hybrid5000": Results_Hybrid5000, "Results_Louvain5000": Results_Louvain5000, "Results_SA5000":Results_SA5000,
+                    "Results_Hybrid10000": Results_Hybrid10000, "Results_Louvain10000": Results_Louvain10000,
+                    "Results_Hybrid50000": Results_Hybrid50000, "Results_Louvain50000": Results_Louvain50000}
 
-    printing_results(Resultstotal)
-    writing_txt(Resultstotal)
+    printing_results_latex_tables(Resultstotal)
+    printing_results_latex_graphs(Resultstotal)
+    
+    
+    # writing_txt(Resultstotal)
 
 
 
