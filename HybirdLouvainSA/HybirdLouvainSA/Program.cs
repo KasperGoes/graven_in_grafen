@@ -9,16 +9,16 @@ namespace HybridLouvainSA
         static void Main(string[] args)
         {
             // Declare threshold that defines the stopping criterium for hybrid louvain-sa
-            int threshold = 100;
+            int threshold = 5000;
             float alpha = 0.999999F;
-            float temp = 5; // TO DO: GEEN IDEE WAT HIER GOEDE WAARDES VOOR ZIJN
+            float temp = 5; 
             float epsilon = 0.03F;
 
             Experiment.run_all_experiments(threshold, temp, alpha, epsilon);
 
-            files file_exp = files.extra;
-            experiment experiment = experiment.sa;
-            Experiment.run_one_experiment(file_exp, experiment, threshold, temp, alpha, epsilon);
+            //files file_exp = files.twentyhousand;
+            //experiment experiment = experiment.sa;
+            //Experiment.run_one_experiment(file_exp, experiment, threshold, temp, alpha, epsilon);
         }
     }
 
@@ -27,7 +27,7 @@ namespace HybridLouvainSA
         small,
         extra,
         thousand,
-        tenthousand,
+        twentyhousand,
         loops,
         louvain
     }

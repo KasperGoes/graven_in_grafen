@@ -44,7 +44,7 @@ namespace HybridLouvainSA
                 }
                 else
                 {
-                    double mod_differencechance = mod_difference;
+                    double mod_differencechance = mod_difference * g.m;
                     double acceptProb = Math.Exp(mod_differencechance / temperature);
                     double random_probability = random.NextDouble();
 

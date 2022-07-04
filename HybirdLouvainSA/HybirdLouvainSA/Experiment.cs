@@ -8,49 +8,55 @@ namespace HybridLouvainSA
 	{
         public static void run_all_experiments(int switch_treshold, float temp, float alpha, float epsilon)
         {
-            int graphs = 10;
+            int graphs = 20;
             string filename = "../../../graphs/";
 
-            foreach(string graphsize_string in Directory.GetDirectories(filename))
+            for (int i = 0; i < graphs; i++)
             {
-                foreach(string mu_string in Directory.GetDirectories(graphsize_string))
+                foreach (string graphsize_string in Directory.GetDirectories(filename))
                 {
-                    for(int i = 0; i < graphs; i++)
+                    foreach (string mu_string in Directory.GetDirectories(graphsize_string))
                     {
                         string graph_path = mu_string + "/" + i.ToString() + "_graph_edges.txt";
 
                         string size_mu = mu_string.Substring(16);
-                        
+
                         Graph og_graph = TextfileConverter.create_graph(graph_path);
 
                         // Run the experiment
                         foreach (experiment exp in Enum.GetValues(typeof(experiment)))
                         {
-                            Graph graph = TextfileConverter.create_graph(graph_path);
+                            if(!(og_graph.vertices.Length >= 10000 && exp == experiment.sa))
+                            {
+                                Graph graph = TextfileConverter.create_graph(graph_path);
 
-                            Stopwatch stopWatch = new Stopwatch();
-                            stopWatch.Start();
+                                Stopwatch stopWatch = new Stopwatch();
+                                stopWatch.Start();
 
-                            Graph final_graph = Experiment.perform_experiment(exp, graph, switch_treshold, og_graph, temp, alpha, epsilon);
+                                Graph final_graph = Experiment.perform_experiment(exp, graph, switch_treshold, og_graph, temp, alpha, epsilon);
 
-                            stopWatch.Stop();
+                                stopWatch.Stop();
 
-                            // Get the elapsed time as a TimeSpan value.
-                            TimeSpan ts = stopWatch.Elapsed;
+                                // Get the elapsed time as a TimeSpan value.
+                                TimeSpan ts = stopWatch.Elapsed;
 
-                            // Format and display the TimeSpan value.
-                            string elapsed_time = String.Format("{0:00}:{1:00}:{2:00}.{3:00}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
+                                // Format and display the TimeSpan value.
+                                string elapsed_time = String.Format("{0:00}:{1:00}:{2:00}.{3:00}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
 
-                            // Write partition to file
-                            TextfileConverter.write_result("../../../partitions/" + size_mu + "/" + i.ToString() + "_" + exp.ToString() + ".txt", final_graph.partition, elapsed_time, graph.modularity);
+                                // Write partition to file
+                                TextfileConverter.write_result("../../../partitions/" + size_mu + "/" + i.ToString() + "_" + exp.ToString() + ".txt", final_graph.partition, elapsed_time, graph.modularity);
+                            }
+                            
                         }
-
-                        Console.WriteLine("finished");
+                            Console.WriteLine("finished");
                     }
                 }
 
-                filename = "../../../graphs/graphs/";
-            }
+                filename = "../../../graphs/";
+
+                if (i == 9)
+                    Console.WriteLine("eerste 10 gedaa");
+            } 
         }
 
 		/// <summary>
@@ -117,8 +123,8 @@ namespace HybridLouvainSA
                     break;
 
                 default:
-                    filename1 = "../../../graphs/graphs/10000/0.3/0_graph_edges.txt";
-                    filename2 = "../../../graphs/graphs/10000/0.3/0_graph_partition.txt";
+                    filename1 = "../../../graphs/20000/0.8/0_graph_edges.txt";
+                    filename2 = "../../../graphs/20000/0.8/0_graph_partition.txt";
                     break;
             }
 
@@ -142,7 +148,7 @@ namespace HybridLouvainSA
             string elapsed_time = String.Format("{0:00}:{1:00}:{2:00}.{3:00}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
 
             // Write partition to file
-            TextfileConverter.write_result("../../../partition/" + experiment.ToString() + " " + graph.vertices.Length.ToString() + ".txt", final_graph.partition, elapsed_time);
+            TextfileConverter.write_result("../../../partition/" + experiment.ToString() + " " + graph.vertices.Length.ToString() + ".txt", final_graph.partition, elapsed_time, graph.modularity);
 
             Console.WriteLine("finished");
         }
