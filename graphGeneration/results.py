@@ -146,7 +146,7 @@ def writing_txt(data):
 def main():
 
     #This file is used to generate the results of the experiments. 
-    #We compare the found partitions to the ground truth and print the results
+    #We compare the found partitions to the ground truth and print the result
 
     path1000 = "HybirdLouvainSA/HybirdLouvainSA/partitions/1000"
     path5000 = "HybirdLouvainSA/HybirdLouvainSA/partitions/5000"
